@@ -16,7 +16,9 @@
 		16906F361FAB9C5700A57E77 /* Seattle_Streetcar_TrackerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16906F351FAB9C5700A57E77 /* Seattle_Streetcar_TrackerUITests.swift */; };
 		16906F441FABD7ED00A57E77 /* Streetcar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16906F431FABD7ED00A57E77 /* Streetcar.swift */; };
 		16906F461FABDF6700A57E77 /* Streetcars.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16906F451FABDF6700A57E77 /* Streetcars.swift */; };
-		AB3581F9328207BC1B8DDC05 /* libPods-Seattle Streetcar Tracker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BE5D6B673ECD21E46FBBFECA /* libPods-Seattle Streetcar Tracker.a */; };
+		16906F481FACC10F00A57E77 /* Stop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16906F471FACC10F00A57E77 /* Stop.swift */; };
+		16906F491FACC87200A57E77 /* SwiftyJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16906F4A1FACC87200A57E77 /* SwiftyJSON.framework */; };
+		4625DF4C816006D30543131A /* Pods_Seattle_Streetcar_Tracker.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 011866411302D464C5927E44 /* Pods_Seattle_Streetcar_Tracker.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -37,6 +39,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		011866411302D464C5927E44 /* Pods_Seattle_Streetcar_Tracker.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Seattle_Streetcar_Tracker.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		16906F121FAB9C5600A57E77 /* Seattle Streetcar Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Seattle Streetcar Tracker.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		16906F151FAB9C5600A57E77 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		16906F171FAB9C5600A57E77 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -52,9 +55,10 @@
 		16906F371FAB9C5700A57E77 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		16906F431FABD7ED00A57E77 /* Streetcar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Streetcar.swift; sourceTree = "<group>"; };
 		16906F451FABDF6700A57E77 /* Streetcars.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Streetcars.swift; sourceTree = "<group>"; };
+		16906F471FACC10F00A57E77 /* Stop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stop.swift; sourceTree = "<group>"; };
+		16906F4A1FACC87200A57E77 /* SwiftyJSON.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SwiftyJSON.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1E625298D88A95BAD4DB7B04 /* Pods-Seattle Streetcar Tracker.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Seattle Streetcar Tracker.release.xcconfig"; path = "Pods/Target Support Files/Pods-Seattle Streetcar Tracker/Pods-Seattle Streetcar Tracker.release.xcconfig"; sourceTree = "<group>"; };
 		208933F6243A76DAC50A1101 /* Pods-Seattle Streetcar Tracker.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Seattle Streetcar Tracker.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Seattle Streetcar Tracker/Pods-Seattle Streetcar Tracker.debug.xcconfig"; sourceTree = "<group>"; };
-		BE5D6B673ECD21E46FBBFECA /* libPods-Seattle Streetcar Tracker.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Seattle Streetcar Tracker.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,7 +66,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AB3581F9328207BC1B8DDC05 /* libPods-Seattle Streetcar Tracker.a in Frameworks */,
+				16906F491FACC87200A57E77 /* SwiftyJSON.framework in Frameworks */,
+				4625DF4C816006D30543131A /* Pods_Seattle_Streetcar_Tracker.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -116,6 +121,7 @@
 				16906F211FAB9C5600A57E77 /* Info.plist */,
 				16906F431FABD7ED00A57E77 /* Streetcar.swift */,
 				16906F451FABDF6700A57E77 /* Streetcars.swift */,
+				16906F471FACC10F00A57E77 /* Stop.swift */,
 			);
 			path = "Seattle Streetcar Tracker";
 			sourceTree = "<group>";
@@ -150,7 +156,8 @@
 		D3FE967245B212A5E167D4EB /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				BE5D6B673ECD21E46FBBFECA /* libPods-Seattle Streetcar Tracker.a */,
+				16906F4A1FACC87200A57E77 /* SwiftyJSON.framework */,
+				011866411302D464C5927E44 /* Pods_Seattle_Streetcar_Tracker.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -330,9 +337,12 @@
 			files = (
 			);
 			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-Seattle Streetcar Tracker/Pods-Seattle Streetcar Tracker-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/SwiftyJSON/SwiftyJSON.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyJSON.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -348,6 +358,7 @@
 			files = (
 				16906F441FABD7ED00A57E77 /* Streetcar.swift in Sources */,
 				16906F181FAB9C5600A57E77 /* ViewController.swift in Sources */,
+				16906F481FACC10F00A57E77 /* Stop.swift in Sources */,
 				16906F161FAB9C5600A57E77 /* AppDelegate.swift in Sources */,
 				16906F461FABDF6700A57E77 /* Streetcars.swift in Sources */,
 			);
