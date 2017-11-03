@@ -24,7 +24,7 @@ var STOP_ICON: UIImageView?
 class ViewController: UIViewController {
     
     override func loadView() {
-        let camera = GMSCameraPosition.camera(withLatitude: 47.605403, longitude: -122.320884, zoom: 15.0)
+        let camera = GMSCameraPosition.camera(withLatitude: 47.605403, longitude: -122.320826, zoom: 15.0)
         mapView = GMSMapView.map(withFrame: CGRect.zero, camera: camera)
         view = mapView
     }
