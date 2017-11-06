@@ -10,8 +10,10 @@ import UIKit
 import GoogleMaps
 import SwiftyJSON
 
-var map: GMSMapView!
 var streetcars: Streetcars = Streetcars()
+var stops = [Stop]()
+
+var map: GMSMapView!
 var scTimer: Timer?
 
 var STREETCAR_IMAGE: UIImage?
@@ -39,28 +41,41 @@ class ViewController: UIViewController, GMSMapViewDelegate {
     }
     
     func mapView(_ mapView: GMSMapView, markerInfoContents marker: GMSMarker) -> UIView? {
-        let infoWindow = Bundle.main.loadNibNamed("CustomInfoWindow", owner: self, options: nil)?.first! as! CustomInfoWindow
+        var infoWindow: AnyObject?
         
         if ((marker.userData as! MarkerData).type == "streetcar") {
-            
+            infoWindow = Bundle.main.loadNibNamed("CustomInfoWindow", owner: self, options: nil)?.first! as! CustomInfoWindow
+
             let id = (marker.userData as! MarkerData).id
-            
             let streetcar = streetcars.findStreetcarById(id: id)
             
             if (streetcar != nil) {
                 let sc = streetcar as! Streetcar
                 
-                infoWindow.idle.text = "\(sc.idle)"
-                infoWindow.speed.text = "\(streetcars.convertKmHrToMph(speed: sc.speedkmhr))"
-                infoWindow.location.text = "\(sc.x) \(sc.y)"
+                let iw = infoWindow as! CustomInfoWindow
+                iw.idle.text = "\(sc.idle)"
+                iw.speed.text = "\(streetcars.convertKmHrToMph(speed: sc.speedkmhr))"
+                iw.location.text = "\(sc.x) \(sc.y)"
+            }
+        }
+        else if ((marker.userData as! MarkerData).type == "stop") {
+            infoWindow = Bundle.main.loadNibNamed("CustomInfoWindowStop", owner: self, options: nil)?.first! as! CustomInfoWindowStop
+            
+            let id = (marker.userData as! MarkerData).id
+            
+            for stop in stops {
+                if stop.stopId == id {
+                    print("Match found!")
+                    getStopArrivals(stop: stop)
+                    let iw = infoWindow as! CustomInfoWindowStop
+                    iw.title.text = stop.title
+                    iw.arrivals.text = stop.arrivals
+                }
             }
         }
         
-        
-        return infoWindow
+        return infoWindow as! UIView
     }
-
-
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -142,6 +157,7 @@ class ViewController: UIViewController, GMSMapViewDelegate {
                     let title: String = stop["title"].stringValue
 
                     let newStop = Stop(stopId: stopId, lat: lat, lon: lon, title: title)
+                    stops.append(newStop)
                     self.createStopMarker(stop: newStop)
                 }
                 
@@ -156,7 +172,28 @@ class ViewController: UIViewController, GMSMapViewDelegate {
                 }
            
         }).resume()
+    }
+    
+    func getStopArrivals(stop: Stop) {
+        let url = URL(string: "http://webservices.nextbus.com/service/publicJSONFeed?command=predictions&a=seattle-sc&r=FHS&s=\(stop.stopId)")
+        
+        URLSession.shared.dataTask(with:url!, completionHandler: {(data, response, error) in
+            guard let data = data, error == nil else { return }
 
+            let json = JSON(data: data)
+            var predStr = "Arriving in "
+            
+            for (_, prediction) in json["predictions"]["direction"]["prediction"] {
+                predStr += prediction["minutes"].stringValue + ", "
+            }
+            
+            let range = predStr.index(predStr.endIndex, offsetBy: -2)..<predStr.endIndex
+            predStr.removeSubrange(range)
+
+            print (predStr)
+            
+            stop.arrivals = predStr
+        }).resume()
     }
     
     func drawPolyLine(path: GMSMutablePath) {
@@ -182,7 +219,6 @@ class ViewController: UIViewController, GMSMapViewDelegate {
                 print(error)
             }
         }).resume()
-
     }
 
 

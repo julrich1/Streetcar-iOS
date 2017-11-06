@@ -45,7 +45,7 @@ class Streetcars {
             if !found {
                 print("Marker not found, creating a new one")
                 
-                var streetcar = Streetcar(
+                let streetcar = Streetcar(
                     streetcar_id: streetcar_id,
                     x: x,
                     y: y,

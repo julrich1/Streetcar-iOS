@@ -21,6 +21,8 @@
 		16AF834F1FB0C4F800D80710 /* CustomInfoWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 16AF834E1FB0C4F800D80710 /* CustomInfoWindow.xib */; };
 		16AF83511FB0C58200D80710 /* CustomInfoWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16AF83501FB0C58200D80710 /* CustomInfoWindow.swift */; };
 		16AF83531FB0D10100D80710 /* MarkerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16AF83521FB0D10100D80710 /* MarkerData.swift */; };
+		16AF83551FB0DDFF00D80710 /* CustomInfoWindowStop.xib in Resources */ = {isa = PBXBuildFile; fileRef = 16AF83541FB0DDFE00D80710 /* CustomInfoWindowStop.xib */; };
+		16AF83571FB0DE3900D80710 /* CustomInfoWindowStop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16AF83561FB0DE3900D80710 /* CustomInfoWindowStop.swift */; };
 		4625DF4C816006D30543131A /* Pods_Seattle_Streetcar_Tracker.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 011866411302D464C5927E44 /* Pods_Seattle_Streetcar_Tracker.framework */; };
 /* End PBXBuildFile section */
 
@@ -63,6 +65,8 @@
 		16AF834E1FB0C4F800D80710 /* CustomInfoWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CustomInfoWindow.xib; sourceTree = "<group>"; };
 		16AF83501FB0C58200D80710 /* CustomInfoWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomInfoWindow.swift; sourceTree = "<group>"; };
 		16AF83521FB0D10100D80710 /* MarkerData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkerData.swift; sourceTree = "<group>"; };
+		16AF83541FB0DDFE00D80710 /* CustomInfoWindowStop.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CustomInfoWindowStop.xib; sourceTree = "<group>"; };
+		16AF83561FB0DE3900D80710 /* CustomInfoWindowStop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomInfoWindowStop.swift; sourceTree = "<group>"; };
 		1E625298D88A95BAD4DB7B04 /* Pods-Seattle Streetcar Tracker.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Seattle Streetcar Tracker.release.xcconfig"; path = "Pods/Target Support Files/Pods-Seattle Streetcar Tracker/Pods-Seattle Streetcar Tracker.release.xcconfig"; sourceTree = "<group>"; };
 		208933F6243A76DAC50A1101 /* Pods-Seattle Streetcar Tracker.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Seattle Streetcar Tracker.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Seattle Streetcar Tracker/Pods-Seattle Streetcar Tracker.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -124,6 +128,7 @@
 				16906F191FAB9C5600A57E77 /* Main.storyboard */,
 				16906F1C1FAB9C5600A57E77 /* Assets.xcassets */,
 				16AF834E1FB0C4F800D80710 /* CustomInfoWindow.xib */,
+				16AF83541FB0DDFE00D80710 /* CustomInfoWindowStop.xib */,
 				16906F1E1FAB9C5600A57E77 /* LaunchScreen.storyboard */,
 				16906F211FAB9C5600A57E77 /* Info.plist */,
 				16906F431FABD7ED00A57E77 /* Streetcar.swift */,
@@ -131,6 +136,7 @@
 				16906F471FACC10F00A57E77 /* Stop.swift */,
 				16AF83501FB0C58200D80710 /* CustomInfoWindow.swift */,
 				16AF83521FB0D10100D80710 /* MarkerData.swift */,
+				16AF83561FB0DE3900D80710 /* CustomInfoWindowStop.swift */,
 			);
 			path = "Seattle Streetcar Tracker";
 			sourceTree = "<group>";
@@ -281,6 +287,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				16AF83551FB0DDFF00D80710 /* CustomInfoWindowStop.xib in Resources */,
 				16AF834F1FB0C4F800D80710 /* CustomInfoWindow.xib in Resources */,
 				16906F201FAB9C5600A57E77 /* LaunchScreen.storyboard in Resources */,
 				16906F1D1FAB9C5600A57E77 /* Assets.xcassets in Resources */,
@@ -366,6 +373,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				16AF83571FB0DE3900D80710 /* CustomInfoWindowStop.swift in Sources */,
 				16AF83531FB0D10100D80710 /* MarkerData.swift in Sources */,
 				16906F441FABD7ED00A57E77 /* Streetcar.swift in Sources */,
 				16906F181FAB9C5600A57E77 /* ViewController.swift in Sources */,

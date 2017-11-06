@@ -14,6 +14,7 @@ class Stop {
     var lat: Double
     var lon: Double
     var title: String
+    var arrivals: String?
     var marker: GMSMarker?
     
     init(stopId: Int, lat: Double, lon: Double, title: String) {
