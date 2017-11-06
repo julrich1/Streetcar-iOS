@@ -62,17 +62,21 @@ class Streetcars {
             }
             
             found = false
-//            var streetcar_id: Int
-//            var x: Double
-//            var y: Double
-//            var route_id: Int
-//            var heading: Int
-//            var speedkmhr: Int
-//            var predictable: Bool
-//            var updated_at: String
-//            //    var marker
-//            var idle: String
-
         }
     }
+    
+    func findStreetcarById(id: Int) -> Any? {
+        for streetcar in streetcars {
+            if streetcar.streetcar_id == id {
+                return streetcar
+            }
+        }
+        
+        return nil
+    }
+    
+    func convertKmHrToMph(speed: Int) -> String {
+        return String(format: "%.0f", round(Double(speed) * 0.62137119223733)) + " Mph"
+    }
+
 }

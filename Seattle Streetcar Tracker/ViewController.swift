@@ -10,7 +10,7 @@ import UIKit
 import GoogleMaps
 import SwiftyJSON
 
-var mapView: GMSMapView?
+var map: GMSMapView!
 var streetcars: Streetcars = Streetcars()
 var scTimer: Timer?
 
@@ -21,14 +21,47 @@ var STOP_IMAGE: UIImage?
 var STOP_ICON: UIImageView?
 
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, GMSMapViewDelegate {
     
     override func loadView() {
         let camera = GMSCameraPosition.camera(withLatitude: 47.605403, longitude: -122.320826, zoom: 15.0)
-        mapView = GMSMapView.map(withFrame: CGRect.zero, camera: camera)
-        view = mapView
+        map = GMSMapView.map(withFrame: CGRect.zero, camera: camera)
+        map.delegate = self
+        
+        view = map
     }
 
+    func mapView(_ mapView: GMSMapView, didTap marker: GMSMarker) -> Bool {
+        print("Clicked")
+        print(marker.position)
+        
+        return false
+    }
+    
+    func mapView(_ mapView: GMSMapView, markerInfoContents marker: GMSMarker) -> UIView? {
+        let infoWindow = Bundle.main.loadNibNamed("CustomInfoWindow", owner: self, options: nil)?.first! as! CustomInfoWindow
+        
+        if ((marker.userData as! MarkerData).type == "streetcar") {
+            
+            let id = (marker.userData as! MarkerData).id
+            
+            let streetcar = streetcars.findStreetcarById(id: id)
+            
+            if (streetcar != nil) {
+                let sc = streetcar as! Streetcar
+                
+                infoWindow.idle.text = "\(sc.idle)"
+                infoWindow.speed.text = "\(streetcars.convertKmHrToMph(speed: sc.speedkmhr))"
+                infoWindow.location.text = "\(sc.x) \(sc.y)"
+            }
+        }
+        
+        
+        return infoWindow
+    }
+
+
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -55,10 +88,15 @@ class ViewController: UIViewController {
         DispatchQueue.main.async {
             let marker = GMSMarker()
             marker.position = CLLocationCoordinate2D(latitude: streetcar.x, longitude: streetcar.y)
-            marker.map = mapView
+            marker.map = map
             marker.iconView = STREETCAR_ICON
             marker.groundAnchor = CGPoint(x: 0.5, y: 0.5)
             marker.zIndex = 1
+            
+            let scData = MarkerData(type: "streetcar", id: streetcar.streetcar_id)
+            
+            marker.userData = scData
+            
             streetcar.marker = marker
         }
     }
@@ -69,7 +107,12 @@ class ViewController: UIViewController {
             marker.position = CLLocationCoordinate2D(latitude: stop.lat, longitude: stop.lon)
             marker.iconView = STOP_ICON
             marker.groundAnchor = CGPoint(x: 0.5, y: 0.5)
-            marker.map = mapView
+            marker.map = map
+            
+            let scData = MarkerData(type: "stop", id: stop.stopId)
+            
+            marker.userData = scData
+
             stop.marker = marker
         }
     }
@@ -121,7 +164,7 @@ class ViewController: UIViewController {
             let polyline = GMSPolyline(path: path)
             polyline.strokeColor = UIColor(named: "polyline")!
             polyline.strokeWidth = 2
-            polyline.map = mapView
+            polyline.map = map
         }
     }
     
