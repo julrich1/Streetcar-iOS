@@ -23,6 +23,7 @@
 		16AF83531FB0D10100D80710 /* MarkerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16AF83521FB0D10100D80710 /* MarkerData.swift */; };
 		16AF83551FB0DDFF00D80710 /* CustomInfoWindowStop.xib in Resources */ = {isa = PBXBuildFile; fileRef = 16AF83541FB0DDFE00D80710 /* CustomInfoWindowStop.xib */; };
 		16AF83571FB0DE3900D80710 /* CustomInfoWindowStop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16AF83561FB0DE3900D80710 /* CustomInfoWindowStop.swift */; };
+		16ED065C1FB24823005F16BF /* BottomPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16ED065B1FB24823005F16BF /* BottomPanel.swift */; };
 		4625DF4C816006D30543131A /* Pods_Seattle_Streetcar_Tracker.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 011866411302D464C5927E44 /* Pods_Seattle_Streetcar_Tracker.framework */; };
 /* End PBXBuildFile section */
 
@@ -67,6 +68,7 @@
 		16AF83521FB0D10100D80710 /* MarkerData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkerData.swift; sourceTree = "<group>"; };
 		16AF83541FB0DDFE00D80710 /* CustomInfoWindowStop.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CustomInfoWindowStop.xib; sourceTree = "<group>"; };
 		16AF83561FB0DE3900D80710 /* CustomInfoWindowStop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomInfoWindowStop.swift; sourceTree = "<group>"; };
+		16ED065B1FB24823005F16BF /* BottomPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomPanel.swift; sourceTree = "<group>"; };
 		1E625298D88A95BAD4DB7B04 /* Pods-Seattle Streetcar Tracker.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Seattle Streetcar Tracker.release.xcconfig"; path = "Pods/Target Support Files/Pods-Seattle Streetcar Tracker/Pods-Seattle Streetcar Tracker.release.xcconfig"; sourceTree = "<group>"; };
 		208933F6243A76DAC50A1101 /* Pods-Seattle Streetcar Tracker.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Seattle Streetcar Tracker.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Seattle Streetcar Tracker/Pods-Seattle Streetcar Tracker.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -126,6 +128,7 @@
 				16906F151FAB9C5600A57E77 /* AppDelegate.swift */,
 				16906F171FAB9C5600A57E77 /* ViewController.swift */,
 				16906F191FAB9C5600A57E77 /* Main.storyboard */,
+				16ED065B1FB24823005F16BF /* BottomPanel.swift */,
 				16906F1C1FAB9C5600A57E77 /* Assets.xcassets */,
 				16AF834E1FB0C4F800D80710 /* CustomInfoWindow.xib */,
 				16AF83541FB0DDFE00D80710 /* CustomInfoWindowStop.xib */,
@@ -375,6 +378,7 @@
 			files = (
 				16AF83571FB0DE3900D80710 /* CustomInfoWindowStop.swift in Sources */,
 				16AF83531FB0D10100D80710 /* MarkerData.swift in Sources */,
+				16ED065C1FB24823005F16BF /* BottomPanel.swift in Sources */,
 				16906F441FABD7ED00A57E77 /* Streetcar.swift in Sources */,
 				16906F181FAB9C5600A57E77 /* ViewController.swift in Sources */,
 				16906F481FACC10F00A57E77 /* Stop.swift in Sources */,

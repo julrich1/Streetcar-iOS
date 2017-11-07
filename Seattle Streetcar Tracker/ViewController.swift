@@ -24,61 +24,138 @@ var STOP_ICON: UIImageView?
 
 
 class ViewController: UIViewController, GMSMapViewDelegate {
+    @IBOutlet weak var mapContainerView: GMSMapView!
+    @IBOutlet var bottomPanel: BottomPanel!
     
-    override func loadView() {
-        let camera = GMSCameraPosition.camera(withLatitude: 47.605403, longitude: -122.320826, zoom: 15.0)
-        map = GMSMapView.map(withFrame: CGRect.zero, camera: camera)
-        map.delegate = self
-        
-        view = map
-    }
+//    override func loadView() {
+//        let camera = GMSCameraPosition.camera(withLatitude: 47.605403, longitude: -122.320826, zoom: 15.0)
+//        map = GMSMapView.map(withFrame: CGRect.zero, camera: camera)
+//        map.delegate = self
+//
+//        view = map
+////        self.view.addSubview(map)
+////        self.view.insertSubview(map, at: 0)
+//    }
 
     func mapView(_ mapView: GMSMapView, didTap marker: GMSMarker) -> Bool {
         print("Clicked")
         print(marker.position)
         
-        return false
-    }
-    
-    func mapView(_ mapView: GMSMapView, markerInfoContents marker: GMSMarker) -> UIView? {
-        var infoWindow: AnyObject?
-        
         if ((marker.userData as! MarkerData).type == "streetcar") {
-            infoWindow = Bundle.main.loadNibNamed("CustomInfoWindow", owner: self, options: nil)?.first! as! CustomInfoWindow
-
+            bottomPanel.show()
+            
             let id = (marker.userData as! MarkerData).id
             let streetcar = streetcars.findStreetcarById(id: id)
             
             if (streetcar != nil) {
                 let sc = streetcar as! Streetcar
                 
-                let iw = infoWindow as! CustomInfoWindow
-                iw.idle.text = "\(sc.idle)"
-                iw.speed.text = "\(streetcars.convertKmHrToMph(speed: sc.speedkmhr))"
-                iw.location.text = "\(sc.x) \(sc.y)"
+                bottomPanel.idle.text = "\(sc.idle)"
+                bottomPanel.speed.text = "\(streetcars.convertKmHrToMph(speed: sc.speedkmhr))"
+                bottomPanel.location.text = "\(sc.x) \(sc.y)"
             }
         }
         else if ((marker.userData as! MarkerData).type == "stop") {
-            infoWindow = Bundle.main.loadNibNamed("CustomInfoWindowStop", owner: self, options: nil)?.first! as! CustomInfoWindowStop
+            bottomPanel.isHidden = false
             
             let id = (marker.userData as! MarkerData).id
             
             for stop in stops {
                 if stop.stopId == id {
                     print("Match found!")
-                    getStopArrivals(stop: stop)
-                    let iw = infoWindow as! CustomInfoWindowStop
-                    iw.title.text = stop.title
-                    iw.arrivals.text = stop.arrivals
+                    
+                    getStopArrivals(stop: stop, complete: {(arrivalStr: String) -> Void in
+                        print ("ArrivalSTR is: ", arrivalStr)
+                        self.bottomPanel.showArrivals(titleStr: stop.title, arrivalsStr: arrivalStr)
+//                        DispatchQueue.main.async {
+//
+////                            self.bottomPanel.title.text = stop.title
+////                            self.bottomPanel.arrivals.text = arrivalStr
+//                        }
+                    })
                 }
             }
         }
-        
-        return infoWindow as! UIView
+
+        return false
     }
+    
+    func mapView(_ mapView: GMSMapView, didTapAt coordinate: CLLocationCoordinate2D) {
+        print("Map clicked")
+        bottomPanel.isHidden = true
+    }
+    
+//    func mapView(_ mapView: GMSMapView, markerInfoContents marker: GMSMarker) -> UIView? {
+//        var infoWindow: AnyObject?
+//
+////        marker.tracksInfoWindowChanges = true
+//        
+//        if ((marker.userData as! MarkerData).type == "streetcar") {
+//            bottomPanel.isHidden = false
+//
+//            infoWindow = Bundle.main.loadNibNamed("CustomInfoWindow", owner: self, options: nil)?.first! as! CustomInfoWindow
+//
+//            let id = (marker.userData as! MarkerData).id
+//            let streetcar = streetcars.findStreetcarById(id: id)
+//
+//            if (streetcar != nil) {
+//                let sc = streetcar as! Streetcar
+//
+//                let iw = infoWindow as! CustomInfoWindow
+//                iw.idle.text = "\(sc.idle)"
+//                iw.speed.text = "\(streetcars.convertKmHrToMph(speed: sc.speedkmhr))"
+//                iw.location.text = "\(sc.x) \(sc.y)"
+//            }
+//        }
+//        else if ((marker.userData as! MarkerData).type == "stop") {
+//            bottomPanel.isHidden = false
+//            infoWindow = Bundle.main.loadNibNamed("CustomInfoWindowStop", owner: self, options: nil)?.first! as! CustomInfoWindowStop
+//
+//            let id = (marker.userData as! MarkerData).id
+//
+//            for stop in stops {
+//                if stop.stopId == id {
+//                    print("Match found!")
+//                    let iw = infoWindow as! CustomInfoWindowStop
+//
+//                    iw.title.text = stop.title
+//                    getStopArrivals(stop: stop, complete: {(arrivalStr: String) -> Void in
+//                        print ("ArrivalSTR is: ", arrivalStr)
+//                            DispatchQueue.main.async {
+//                                infoWindow = Bundle.main.loadNibNamed("CustomInfoWindowStop", owner: self, options: nil)?.first! as! CustomInfoWindowStop
+//                                
+//                                let iw = infoWindow as! CustomInfoWindowStop
+//
+//                                iw.title.text = stop.title
+//                                iw.arrivals.text = arrivalStr
+//
+//                            }
+//                        })
+//
+//                    return iw
+//                }
+//            }
+//        }
+//
+//        return infoWindow as? UIView
+//    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        map = mapContainerView
+        
+        let camera = GMSCameraPosition.camera(withLatitude: 47.605403, longitude: -122.320826, zoom: 15.0)
+//        map = GMSMapView.map(withFrame: CGRect.zero, camera: camera)
+        map.moveCamera(GMSCameraUpdate.setCamera(camera))
+        map.delegate = self
+        //
+        //        view = map
+        ////        self.view.addSubview(map)
+        ////        self.view.insertSubview(map, at: 0)
+
+        self.view.addSubview(map!)
+        self.view.sendSubview(toBack: map)
 
         STREETCAR_IMAGE = UIImage(named: "streetcar")!.withRenderingMode(.alwaysTemplate)
         STREETCAR_ICON = UIImageView(image: STREETCAR_IMAGE)
@@ -127,7 +204,7 @@ class ViewController: UIViewController, GMSMapViewDelegate {
             let scData = MarkerData(type: "stop", id: stop.stopId)
             
             marker.userData = scData
-
+            
             stop.marker = marker
         }
     }
@@ -174,7 +251,7 @@ class ViewController: UIViewController, GMSMapViewDelegate {
         }).resume()
     }
     
-    func getStopArrivals(stop: Stop) {
+    func getStopArrivals(stop: Stop, complete: @escaping (String) -> Void) {
         let url = URL(string: "http://webservices.nextbus.com/service/publicJSONFeed?command=predictions&a=seattle-sc&r=FHS&s=\(stop.stopId)")
         
         URLSession.shared.dataTask(with:url!, completionHandler: {(data, response, error) in
@@ -193,6 +270,8 @@ class ViewController: UIViewController, GMSMapViewDelegate {
             print (predStr)
             
             stop.arrivals = predStr
+            
+            complete(predStr)
         }).resume()
     }
     
