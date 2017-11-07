@@ -25,7 +25,8 @@ var STOP_ICON: UIImageView?
 
 class ViewController: UIViewController, GMSMapViewDelegate {
     @IBOutlet weak var mapContainerView: GMSMapView!
-    @IBOutlet var bottomPanel: BottomPanel!
+    @IBOutlet var bottomStopPanel: BottomPanelStop!
+    @IBOutlet var bottomStreetcarPanel: BottomPanelStreetcar!
     
 //    override func loadView() {
 //        let camera = GMSCameraPosition.camera(withLatitude: 47.605403, longitude: -122.320826, zoom: 15.0)
@@ -42,7 +43,8 @@ class ViewController: UIViewController, GMSMapViewDelegate {
         print(marker.position)
         
         if ((marker.userData as! MarkerData).type == "streetcar") {
-            bottomPanel.show()
+            bottomStopPanel.hide()
+            bottomStreetcarPanel.show()
             
             let id = (marker.userData as! MarkerData).id
             let streetcar = streetcars.findStreetcarById(id: id)
@@ -50,13 +52,12 @@ class ViewController: UIViewController, GMSMapViewDelegate {
             if (streetcar != nil) {
                 let sc = streetcar as! Streetcar
                 
-                bottomPanel.idle.text = "\(sc.idle)"
-                bottomPanel.speed.text = "\(streetcars.convertKmHrToMph(speed: sc.speedkmhr))"
-                bottomPanel.location.text = "\(sc.x) \(sc.y)"
+                self.bottomStreetcarPanel.showStreetcar(idle: sc.idle, speed: streetcars.convertKmHrToMph(speed: sc.speedkmhr), location: "\(sc.x) \(sc.y)")
             }
         }
         else if ((marker.userData as! MarkerData).type == "stop") {
-            bottomPanel.isHidden = false
+            bottomStreetcarPanel.hide()
+            bottomStopPanel.show()
             
             let id = (marker.userData as! MarkerData).id
             
@@ -66,12 +67,7 @@ class ViewController: UIViewController, GMSMapViewDelegate {
                     
                     getStopArrivals(stop: stop, complete: {(arrivalStr: String) -> Void in
                         print ("ArrivalSTR is: ", arrivalStr)
-                        self.bottomPanel.showArrivals(titleStr: stop.title, arrivalsStr: arrivalStr)
-//                        DispatchQueue.main.async {
-//
-////                            self.bottomPanel.title.text = stop.title
-////                            self.bottomPanel.arrivals.text = arrivalStr
-//                        }
+                        self.bottomStopPanel.showArrivals(titleStr: stop.title, arrivalsStr: arrivalStr)
                     })
                 }
             }
@@ -82,7 +78,8 @@ class ViewController: UIViewController, GMSMapViewDelegate {
     
     func mapView(_ mapView: GMSMapView, didTapAt coordinate: CLLocationCoordinate2D) {
         print("Map clicked")
-        bottomPanel.isHidden = true
+        bottomStopPanel.hide()
+        bottomStreetcarPanel.hide()
     }
     
 //    func mapView(_ mapView: GMSMapView, markerInfoContents marker: GMSMarker) -> UIView? {

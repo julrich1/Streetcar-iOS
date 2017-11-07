@@ -1,5 +1,5 @@
 //
-//  BottomPanel.swift
+//  BottomPanelStreetcar.swift
 //  Seattle Streetcar Tracker
 //
 //  Created by Jacob Ulrich on 11/7/17.
@@ -7,15 +7,14 @@
 //
 
 import Foundation
+
+import Foundation
 import UIKit
 
-class BottomPanel: UIView {
+class BottomPanelStreetcar: UIView {
     @IBOutlet var idle: UILabel!
     @IBOutlet var speed: UILabel!
     @IBOutlet var location: UILabel!
-    
-    @IBOutlet var title: UILabel!
-    @IBOutlet var arrivals: UILabel!
     
     func hide() {
         DispatchQueue.main.async {
@@ -29,11 +28,11 @@ class BottomPanel: UIView {
         }
     }
     
-    func showArrivals(titleStr: String, arrivalsStr: String) {
-        show()
+    func showStreetcar(idle: String, speed: String, location: String) {
         DispatchQueue.main.async {
-            self.title.text = titleStr
-            self.arrivals.text = arrivalsStr
+            self.idle.text = "Idle time: " + idle
+            self.speed.text = "Last speed: " + speed
+            self.location.text = "Location: " + location
         }
     }
 }
