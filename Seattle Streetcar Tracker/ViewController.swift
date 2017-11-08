@@ -26,12 +26,29 @@ var carAnimation = ARCarMovement()
 
 var selectedItem = (id: 0, type: "")
 
-var route = 1
-
 class ViewController: UIViewController, GMSMapViewDelegate {
     @IBOutlet weak var mapContainerView: GMSMapView!
     @IBOutlet var bottomStopPanel: BottomPanelStop!
     @IBOutlet var bottomStreetcarPanel: BottomPanelStreetcar!
+    
+    @IBOutlet weak var gestureScreenEdgePan: UIScreenEdgePanGestureRecognizer!
+    @IBOutlet weak var viewBlack: UIView!
+    @IBOutlet weak var viewMenu: UIView!
+    @IBOutlet weak var constraintMenuLeft: NSLayoutConstraint!
+    @IBOutlet weak var constraintMenuWidth: NSLayoutConstraint!
+    
+//    @IBOutlet weak var fhsRoute: UIButton!
+//    @IBOutlet weak var sluRoute: UIButton!
+    var polylines = [GMSPolyline]()
+    
+    var route = 1
+    
+    let maxBlackViewAlpha: CGFloat = 0.5
+    let animationDuration: TimeInterval = 0.3
+    var isLeftToRight = true
+    
+    var urlSession = URLSession.shared
+
     
 //    override func loadView() {
 //        let camera = GMSCameraPosition.camera(withLatitude: 47.605403, longitude: -122.320826, zoom: 15.0)
@@ -46,9 +63,27 @@ class ViewController: UIViewController, GMSMapViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Hamburger Menu
+        constraintMenuLeft.constant = -constraintMenuWidth.constant
+        
+        viewBlack.alpha = 0
+        viewBlack.isHidden = true
+        
+        let language = NSLocale.preferredLanguages.first!
+        let direction = NSLocale.characterDirection(forLanguage: language)
+        
+        if direction == .leftToRight {
+            gestureScreenEdgePan.edges = .left
+            isLeftToRight = true
+        }
+        else {
+            gestureScreenEdgePan.edges = .right
+            isLeftToRight = false
+        }
+        
         map = mapContainerView
         
-        let camera = GMSCameraPosition.camera(withLatitude: 47.605403, longitude: -122.320826, zoom: 15.0)
+        let camera = GMSCameraPosition.camera(withLatitude: 47.609809, longitude: -122.320826, zoom: 15.0)
         
         map.moveCamera(GMSCameraUpdate.setCamera(camera))
         map.delegate = self
@@ -62,10 +97,13 @@ class ViewController: UIViewController, GMSMapViewDelegate {
         STOP_IMAGE = UIImage(named: "stop_icon")!.withRenderingMode(.alwaysTemplate)
         STOP_SELECTED_IMAGE = UIImage(named: "stop_selected_icon")!.withRenderingMode(.alwaysTemplate)
         
-        updateStreetcars()
         getStops()
+        startTimers()
+    }
+    
+    func startTimers() {
+        updateStreetcars()
         scTimer = Timer.scheduledTimer(timeInterval: 2, target: self, selector: #selector(self.updateStreetcars), userInfo: nil, repeats: true)
-        
     }
     
     func removeSelectedIcon() {
@@ -133,6 +171,7 @@ class ViewController: UIViewController, GMSMapViewDelegate {
         print("Map clicked")
         removeSelectedIcon()
         selectedItem = (id: 0, type: "")
+        hideMenu()
         bottomStopPanel.hide()
         bottomStreetcarPanel.hide()
     }
@@ -190,7 +229,7 @@ class ViewController: UIViewController, GMSMapViewDelegate {
     func getStops() {
         let url = URL(string: "http://sc-dev.shadowline.net/api/routes/" + String(route))
 
-        URLSession.shared.dataTask(with:url!, completionHandler: {(data, response, error) in
+        urlSession.dataTask(with:url!, completionHandler: {(data, response, error) in
             guard let data = data, error == nil else { return }
             
                 var json: JSON
@@ -239,7 +278,7 @@ class ViewController: UIViewController, GMSMapViewDelegate {
         
         let url = URL(string: "http://webservices.nextbus.com/service/publicJSONFeed?command=predictions&a=seattle-sc&r=" + routeStr + "&s=\(stop.stopId)")
         
-        URLSession.shared.dataTask(with:url!, completionHandler: {(data, response, error) in
+        urlSession.dataTask(with:url!, completionHandler: {(data, response, error) in
             guard let data = data, error == nil else { return }
 
             var json: JSON
@@ -275,17 +314,36 @@ class ViewController: UIViewController, GMSMapViewDelegate {
             polyline.strokeColor = UIColor(named: "polyline")!
             polyline.strokeWidth = 2
             polyline.map = map
+            
+            self.polylines.append(polyline)
         }
+    }
+    
+    func removePolyLines() {
+        for polyline in polylines {
+            polyline.map = nil
+        }
+        
+        polylines.removeAll(keepingCapacity: false)
+    }
+    
+    func removeStops() {
+        for stop in stops {
+            stop.marker?.map = nil
+        }
+        
+        stops.removeAll(keepingCapacity: false)
     }
     
     @objc func updateStreetcars() {
         let url = URL(string: "http://sc-dev.shadowline.net/api/streetcars/" + String(route))
-        URLSession.shared.dataTask(with:url!, completionHandler: {(data, response, error) in
+        print ("updateStreetcars() called")
+        urlSession.dataTask(with:url!, completionHandler: {(data, response, error) in
             guard let data = data, error == nil else { return }
             
             do {
                 let jsonArray = try JSONSerialization.jsonObject(with: data, options: []) as! [AnyObject]
-
+                print ("Response received for streetcars, updating the array!")
                 streetcars.updateStreetcars(scObject: jsonArray)
                 self.updateMarkers();
             } catch let error as NSError {
@@ -294,6 +352,194 @@ class ViewController: UIViewController, GMSMapViewDelegate {
         }).resume()
     }
 
+    @IBAction func gestureScreenEdgePan(_ sender: UIScreenEdgePanGestureRecognizer) {
+        print("Gesturescreenedgepan called")
+        // retrieve the current state of the gesture
+        if sender.state == UIGestureRecognizerState.began {
+            
+            // if the user has just started dragging, make sure view for dimming effect is hidden well
+            viewBlack.isHidden = false
+            viewBlack.alpha = 0
+            
+        } else if (sender.state == UIGestureRecognizerState.changed) {
+            
+            // retrieve the amount viewMenu has been dragged
+            var translationX = sender.translation(in: sender.view).x
+            
+            if !isLeftToRight {
+                translationX = -translationX
+            }
+            
+            if -constraintMenuWidth.constant + translationX > 0 {
+                
+                // viewMenu fully dragged out
+                constraintMenuLeft.constant = 0
+                viewBlack.alpha = maxBlackViewAlpha
+                
+            } else if translationX < 0 {
+                
+                // viewMenu fully dragged in
+                constraintMenuLeft.constant = -constraintMenuWidth.constant
+                viewBlack.alpha = 0
+                
+            } else {
+                
+                // viewMenu is being dragged somewhere between min and max amount
+                constraintMenuLeft.constant = -constraintMenuWidth.constant + translationX
+                
+                let ratio = translationX / constraintMenuWidth.constant
+                let alphaValue = ratio * maxBlackViewAlpha
+                viewBlack.alpha = alphaValue
+            }
+        } else {
+            
+            // if the menu was dragged less than half of it's width, close it. Otherwise, open it.
+            if constraintMenuLeft.constant < -constraintMenuWidth.constant / 2 {
+                self.hideMenu()
+            } else {
+                self.openMenu()
+            }
+        }
+    }
+    
+    @IBAction func gesturePan(_ sender: UIPanGestureRecognizer) {
+        print ("Gesturepan called")
+        // retrieve the current state of the gesture
+        if sender.state == UIGestureRecognizerState.began {
+            
+            // no need to do anything
+        } else if sender.state == UIGestureRecognizerState.changed {
+            
+            // retrieve the amount viewMenu has been dragged
+            var translationX = sender.translation(in: sender.view).x
+            
+            if !isLeftToRight {
+                translationX = -translationX
+            }
+            
+            if translationX > 0 {
+                
+                // viewMenu fully dragged out
+                constraintMenuLeft.constant = 0
+                viewBlack.alpha = maxBlackViewAlpha
+                
+            } else if translationX < -constraintMenuWidth.constant {
+                
+                // viewMenu fully dragged in
+                constraintMenuLeft.constant = -constraintMenuWidth.constant
+                viewBlack.alpha = 0
+                
+            } else {
+                
+                // it's being dragged somewhere between min and max amount
+                constraintMenuLeft.constant = translationX
+                
+                let ratio = (constraintMenuWidth.constant + translationX) / constraintMenuWidth.constant
+                let alphaValue = ratio * maxBlackViewAlpha
+                viewBlack.alpha = alphaValue
+            }
+        } else {
+            
+            // if the drag was less than half of it's width, close it. Otherwise, open it.
+            if constraintMenuLeft.constant < -constraintMenuWidth.constant / 2 {
+                self.hideMenu()
+            } else {
+                self.openMenu()
+            }
+        }
+    }
+    
+    @IBAction func gestureTap(_ sender: UITapGestureRecognizer) {
+        self.hideMenu()
+    }
+    
+    @IBAction func buttonHamburger() {
+        if constraintMenuLeft.constant == -constraintMenuWidth.constant {
+            self.openMenu()
+        }
+        else if constraintMenuLeft.constant == 0 {
+            self.hideMenu()
+        }
+    }
+    
+    func openMenu() {
+        print("Openmenu called")
+        // when menu is opened, it's left constraint should be 0
+        constraintMenuLeft.constant = 0
+        
+        // view for dimming effect should also be shown
+        viewBlack.isHidden = false
+        
+        // animate opening of the menu - including opacity value
+        UIView.animate(withDuration: animationDuration, animations: {
+            
+            self.view.layoutIfNeeded()
+            self.viewBlack.alpha = self.maxBlackViewAlpha
+            
+        }, completion: { (complete) in
+            
+            // disable the screen edge pan gesture when menu is fully opened
+            self.gestureScreenEdgePan.isEnabled = false
+        })
+    }
+    
+    func hideMenu() {
+        print ("Hidemenu called")
+        // when menu is closed, it's left constraint should be of value that allows it to be completely hidden to the left of the screen - which is negative value of it's width
+        constraintMenuLeft.constant = -constraintMenuWidth.constant
+        
+        // animate closing of the menu - including opacity value
+        UIView.animate(withDuration: animationDuration, animations: {
+            
+            self.view.layoutIfNeeded()
+            self.viewBlack.alpha = 0
+            
+        }, completion: { (complete) in
+            
+            // reenable the screen edge pan gesture so we can detect it next time
+            self.gestureScreenEdgePan.isEnabled = true
+            
+            // hide the view for dimming effect so it wont interrupt touches for views underneath it
+            self.viewBlack.isHidden = true
+        })
+    }
 
+    @IBAction func fhsRouteAction() {
+        print("Change route")
+        route = 1
+        swapViews(lat: 47.609809, lon: -122.320826)
+        getStops()
+    }
+
+    @IBAction func sluRouteAction() {
+        print("Change route")
+        route = 2
+        swapViews(lat: 47.621358, lon: -122.338190)
+        getStops()
+    }
+    
+    func swapViews(lat: Double, lon: Double) {
+        scTimer?.invalidate()
+        
+        urlSession.getAllTasks { tasks in
+            for task in tasks {
+                task.cancel()
+                print("Cancelling task: ", task)
+            }
+        }
+
+        hideMenu()
+        bottomStopPanel.hide()
+        bottomStreetcarPanel.hide()
+        
+        streetcars.removeStreetcars()
+        removePolyLines()
+        removeStops()
+        
+        startTimers()
+        
+        let camera = GMSCameraPosition.camera(withLatitude: lat, longitude: lon, zoom: 15.0)
+        map.moveCamera(GMSCameraUpdate.setCamera(camera))
+    }
 }
 

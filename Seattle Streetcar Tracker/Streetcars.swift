@@ -27,7 +27,7 @@ class Streetcars {
             else {
                 return
             }
-            
+            print("Streetcars array length is ", streetcars.endIndex)
             for streetcar in streetcars {
                 if streetcar.streetcar_id == streetcar_id {
                     streetcar.x = x
@@ -77,6 +77,15 @@ class Streetcars {
     
     func convertKmHrToMph(speed: Int) -> String {
         return String(format: "%.0f", round(Double(speed) * 0.62137119223733)) + " Mph"
+    }
+    
+    func removeStreetcars() {
+        for streetcar in streetcars {
+            streetcar.marker?.map = nil
+        }
+        
+        streetcars.removeAll(keepingCapacity: false)
+        print ("Removed all streetcars", streetcars.endIndex)
     }
 
 }
