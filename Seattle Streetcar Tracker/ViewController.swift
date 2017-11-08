@@ -22,6 +22,7 @@ var STREETCAR_ICON: UIImageView?
 var STOP_IMAGE: UIImage?
 var STOP_ICON: UIImageView?
 
+var carAnimation = ARCarMovement()
 
 class ViewController: UIViewController, GMSMapViewDelegate {
     @IBOutlet weak var mapContainerView: GMSMapView!
@@ -81,61 +82,6 @@ class ViewController: UIViewController, GMSMapViewDelegate {
         bottomStopPanel.hide()
         bottomStreetcarPanel.hide()
     }
-    
-//    func mapView(_ mapView: GMSMapView, markerInfoContents marker: GMSMarker) -> UIView? {
-//        var infoWindow: AnyObject?
-//
-////        marker.tracksInfoWindowChanges = true
-//        
-//        if ((marker.userData as! MarkerData).type == "streetcar") {
-//            bottomPanel.isHidden = false
-//
-//            infoWindow = Bundle.main.loadNibNamed("CustomInfoWindow", owner: self, options: nil)?.first! as! CustomInfoWindow
-//
-//            let id = (marker.userData as! MarkerData).id
-//            let streetcar = streetcars.findStreetcarById(id: id)
-//
-//            if (streetcar != nil) {
-//                let sc = streetcar as! Streetcar
-//
-//                let iw = infoWindow as! CustomInfoWindow
-//                iw.idle.text = "\(sc.idle)"
-//                iw.speed.text = "\(streetcars.convertKmHrToMph(speed: sc.speedkmhr))"
-//                iw.location.text = "\(sc.x) \(sc.y)"
-//            }
-//        }
-//        else if ((marker.userData as! MarkerData).type == "stop") {
-//            bottomPanel.isHidden = false
-//            infoWindow = Bundle.main.loadNibNamed("CustomInfoWindowStop", owner: self, options: nil)?.first! as! CustomInfoWindowStop
-//
-//            let id = (marker.userData as! MarkerData).id
-//
-//            for stop in stops {
-//                if stop.stopId == id {
-//                    print("Match found!")
-//                    let iw = infoWindow as! CustomInfoWindowStop
-//
-//                    iw.title.text = stop.title
-//                    getStopArrivals(stop: stop, complete: {(arrivalStr: String) -> Void in
-//                        print ("ArrivalSTR is: ", arrivalStr)
-//                            DispatchQueue.main.async {
-//                                infoWindow = Bundle.main.loadNibNamed("CustomInfoWindowStop", owner: self, options: nil)?.first! as! CustomInfoWindowStop
-//                                
-//                                let iw = infoWindow as! CustomInfoWindowStop
-//
-//                                iw.title.text = stop.title
-//                                iw.arrivals.text = arrivalStr
-//
-//                            }
-//                        })
-//
-//                    return iw
-//                }
-//            }
-//        }
-//
-//        return infoWindow as? UIView
-//    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -208,10 +154,12 @@ class ViewController: UIViewController, GMSMapViewDelegate {
 
     
     func updateMarkers() {
+
         DispatchQueue.main.async {
             for streetcar in streetcars.streetcars {
-                streetcar.marker?.position = CLLocationCoordinate2D(latitude: streetcar.x, longitude: streetcar.y)
-                streetcar.marker?.rotation = CLLocationDegrees(streetcar.heading)
+                carAnimation.ARCarMovement(marker: streetcar.marker!, oldCoordinate: streetcar.marker!.position, newCoordinate: CLLocationCoordinate2D(latitude: streetcar.x, longitude: streetcar.y), mapView: map, bearing: Float(streetcar.heading))
+//                streetcar.marker?.position = CLLocationCoordinate2D(latitude: streetcar.x, longitude: streetcar.y)
+//                streetcar.marker?.rotation = CLLocationDegrees(streetcar.heading)
             }
         }
     }
