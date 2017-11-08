@@ -222,7 +222,15 @@ class ViewController: UIViewController, GMSMapViewDelegate {
         URLSession.shared.dataTask(with:url!, completionHandler: {(data, response, error) in
             guard let data = data, error == nil else { return }
             
-            let json = JSON(data: data)
+                var json: JSON
+            
+                do {
+                    json = try JSON(data: data)
+                }
+                catch {
+                    print("There was an error fetching routes")
+                    return
+                }
             
                 for (_, stop) in json["route"]["stop"] {
                     let stopId: Int = stop["stopId"].intValue
@@ -254,7 +262,16 @@ class ViewController: UIViewController, GMSMapViewDelegate {
         URLSession.shared.dataTask(with:url!, completionHandler: {(data, response, error) in
             guard let data = data, error == nil else { return }
 
-            let json = JSON(data: data)
+            var json: JSON
+            
+            do {
+                json = try JSON(data: data)
+            }
+            catch {
+                print("There was an error fetching arrival times")
+                return
+            }
+            
             var predStr = "Arriving in "
             
             for (_, prediction) in json["predictions"]["direction"]["prediction"] {
