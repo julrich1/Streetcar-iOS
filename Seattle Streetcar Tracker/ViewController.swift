@@ -17,10 +17,10 @@ var map: GMSMapView!
 var scTimer: Timer?
 
 var STREETCAR_IMAGE: UIImage?
-var STREETCAR_ICON: UIImageView?
+var STREETCAR_SELECTED_IMAGE: UIImage?
 
 var STOP_IMAGE: UIImage?
-var STOP_ICON: UIImageView?
+var STOP_SELECTED_IMAGE: UIImage?
 
 var carAnimation = ARCarMovement()
 
@@ -38,12 +38,38 @@ class ViewController: UIViewController, GMSMapViewDelegate {
 ////        self.view.addSubview(map)
 ////        self.view.insertSubview(map, at: 0)
 //    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        map = mapContainerView
+        
+        let camera = GMSCameraPosition.camera(withLatitude: 47.605403, longitude: -122.320826, zoom: 15.0)
+        
+        map.moveCamera(GMSCameraUpdate.setCamera(camera))
+        map.delegate = self
+        
+        self.view.addSubview(map!)
+        self.view.sendSubview(toBack: map)
+        
+        STREETCAR_IMAGE = UIImage(named: "streetcar")!.withRenderingMode(.alwaysTemplate)
+        STREETCAR_SELECTED_IMAGE = UIImage(named: "streetcar_selected")!.withRenderingMode(.alwaysTemplate)
+        
+        STOP_IMAGE = UIImage(named: "stop_icon")!.withRenderingMode(.alwaysTemplate)
+        STOP_SELECTED_IMAGE = UIImage(named: "stop_selected_icon")!.withRenderingMode(.alwaysTemplate)
+        
+        updateStreetcars()
+        getStops()
+        scTimer = Timer.scheduledTimer(timeInterval: 2, target: self, selector: #selector(self.updateStreetcars), userInfo: nil, repeats: true)
+        
+    }
 
     func mapView(_ mapView: GMSMapView, didTap marker: GMSMarker) -> Bool {
         print("Clicked")
         print(marker.position)
         
         if ((marker.userData as! MarkerData).type == "streetcar") {
+            marker.icon = STREETCAR_SELECTED_IMAGE
             bottomStopPanel.hide()
             bottomStreetcarPanel.show()
             
@@ -57,6 +83,7 @@ class ViewController: UIViewController, GMSMapViewDelegate {
             }
         }
         else if ((marker.userData as! MarkerData).type == "stop") {
+            marker.icon = STOP_SELECTED_IMAGE
             bottomStreetcarPanel.hide()
             bottomStopPanel.show()
             
@@ -83,37 +110,6 @@ class ViewController: UIViewController, GMSMapViewDelegate {
         bottomStreetcarPanel.hide()
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        map = mapContainerView
-        
-        let camera = GMSCameraPosition.camera(withLatitude: 47.605403, longitude: -122.320826, zoom: 15.0)
-//        map = GMSMapView.map(withFrame: CGRect.zero, camera: camera)
-        map.moveCamera(GMSCameraUpdate.setCamera(camera))
-        map.delegate = self
-        //
-        //        view = map
-        ////        self.view.addSubview(map)
-        ////        self.view.insertSubview(map, at: 0)
-
-        self.view.addSubview(map!)
-        self.view.sendSubview(toBack: map)
-
-        STREETCAR_IMAGE = UIImage(named: "streetcar")!.withRenderingMode(.alwaysTemplate)
-        STREETCAR_ICON = UIImageView(image: STREETCAR_IMAGE)
-        STREETCAR_ICON?.tintColor = UIColor(named: "ltBlue")
-        
-        STOP_IMAGE = UIImage(named: "stop_icon")!.withRenderingMode(.alwaysTemplate)
-        STOP_ICON = UIImageView(image: STOP_IMAGE)
-        STOP_ICON?.tintColor = UIColor(named: "dkBlue")
-        
-        updateStreetcars()
-        getStops()
-        scTimer = Timer.scheduledTimer(timeInterval: 2, target: self, selector: #selector(self.updateStreetcars), userInfo: nil, repeats: true)
-
-    }
-
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -124,7 +120,7 @@ class ViewController: UIViewController, GMSMapViewDelegate {
             let marker = GMSMarker()
             marker.position = CLLocationCoordinate2D(latitude: streetcar.x, longitude: streetcar.y)
             marker.map = map
-            marker.iconView = STREETCAR_ICON
+            marker.icon = STREETCAR_IMAGE
             marker.groundAnchor = CGPoint(x: 0.5, y: 0.5)
             marker.zIndex = 1
             
@@ -140,7 +136,7 @@ class ViewController: UIViewController, GMSMapViewDelegate {
         DispatchQueue.main.async {
             let marker = GMSMarker()
             marker.position = CLLocationCoordinate2D(latitude: stop.lat, longitude: stop.lon)
-            marker.iconView = STOP_ICON
+            marker.icon = STOP_IMAGE
             marker.groundAnchor = CGPoint(x: 0.5, y: 0.5)
             marker.map = map
             
