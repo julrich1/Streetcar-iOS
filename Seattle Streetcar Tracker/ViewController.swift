@@ -24,6 +24,8 @@ var STOP_SELECTED_IMAGE: UIImage?
 
 var carAnimation = ARCarMovement()
 
+var selectedItem = (id: 0, type: "")
+
 class ViewController: UIViewController, GMSMapViewDelegate {
     @IBOutlet weak var mapContainerView: GMSMapView!
     @IBOutlet var bottomStopPanel: BottomPanelStop!
@@ -63,17 +65,39 @@ class ViewController: UIViewController, GMSMapViewDelegate {
         scTimer = Timer.scheduledTimer(timeInterval: 2, target: self, selector: #selector(self.updateStreetcars), userInfo: nil, repeats: true)
         
     }
+    
+    func removeSelectedIcon() {
+        if selectedItem.type == "streetcar" {
+            let sc = streetcars.findStreetcarById(id: selectedItem.id)
+            if sc != nil {
+                let streetC = sc as! Streetcar
+                streetC.marker?.icon = STREETCAR_IMAGE
+            }
+        }
+        else if selectedItem.type == "stop" {
+            for stop in stops {
+                if stop.stopId == selectedItem.id {
+                    stop.marker?.icon = STOP_IMAGE
+                }
+            }
+        }
+    }
 
     func mapView(_ mapView: GMSMapView, didTap marker: GMSMarker) -> Bool {
-        print("Clicked")
-        print(marker.position)
-        
+        print("Clicked a marker")
+
+        let id = (marker.userData as! MarkerData).id
+
+        if id != selectedItem.id {
+            removeSelectedIcon()
+        }
+
         if ((marker.userData as! MarkerData).type == "streetcar") {
+            selectedItem = (id: id as Int, type: "streetcar")
             marker.icon = STREETCAR_SELECTED_IMAGE
             bottomStopPanel.hide()
             bottomStreetcarPanel.show()
             
-            let id = (marker.userData as! MarkerData).id
             let streetcar = streetcars.findStreetcarById(id: id)
             
             if (streetcar != nil) {
@@ -83,11 +107,10 @@ class ViewController: UIViewController, GMSMapViewDelegate {
             }
         }
         else if ((marker.userData as! MarkerData).type == "stop") {
+            selectedItem = (id: id as Int, type: "stop")
             marker.icon = STOP_SELECTED_IMAGE
             bottomStreetcarPanel.hide()
             bottomStopPanel.show()
-            
-            let id = (marker.userData as! MarkerData).id
             
             for stop in stops {
                 if stop.stopId == id {
@@ -106,6 +129,8 @@ class ViewController: UIViewController, GMSMapViewDelegate {
     
     func mapView(_ mapView: GMSMapView, didTapAt coordinate: CLLocationCoordinate2D) {
         print("Map clicked")
+        removeSelectedIcon()
+        selectedItem = (id: 0, type: "")
         bottomStopPanel.hide()
         bottomStreetcarPanel.hide()
     }
