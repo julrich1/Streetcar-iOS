@@ -26,6 +26,8 @@ var carAnimation = ARCarMovement()
 
 var selectedItem = (id: 0, type: "")
 
+var route = 1
+
 class ViewController: UIViewController, GMSMapViewDelegate {
     @IBOutlet weak var mapContainerView: GMSMapView!
     @IBOutlet var bottomStopPanel: BottomPanelStop!
@@ -186,7 +188,7 @@ class ViewController: UIViewController, GMSMapViewDelegate {
     }
     
     func getStops() {
-        let url = URL(string: "http://sc-dev.shadowline.net/api/routes/1")
+        let url = URL(string: "http://sc-dev.shadowline.net/api/routes/" + String(route))
 
         URLSession.shared.dataTask(with:url!, completionHandler: {(data, response, error) in
             guard let data = data, error == nil else { return }
@@ -226,7 +228,16 @@ class ViewController: UIViewController, GMSMapViewDelegate {
     }
     
     func getStopArrivals(stop: Stop, complete: @escaping (String) -> Void) {
-        let url = URL(string: "http://webservices.nextbus.com/service/publicJSONFeed?command=predictions&a=seattle-sc&r=FHS&s=\(stop.stopId)")
+        var routeStr: String
+        
+        if route == 1 {
+            routeStr = "FHS"
+        }
+        else {
+            routeStr = "SLU"
+        }
+        
+        let url = URL(string: "http://webservices.nextbus.com/service/publicJSONFeed?command=predictions&a=seattle-sc&r=" + routeStr + "&s=\(stop.stopId)")
         
         URLSession.shared.dataTask(with:url!, completionHandler: {(data, response, error) in
             guard let data = data, error == nil else { return }
@@ -268,7 +279,7 @@ class ViewController: UIViewController, GMSMapViewDelegate {
     }
     
     @objc func updateStreetcars() {
-        let url = URL(string: "http://sc-dev.shadowline.net/api/streetcars/1")
+        let url = URL(string: "http://sc-dev.shadowline.net/api/streetcars/" + String(route))
         URLSession.shared.dataTask(with:url!, completionHandler: {(data, response, error) in
             guard let data = data, error == nil else { return }
             
