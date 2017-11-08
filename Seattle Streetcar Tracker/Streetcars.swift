@@ -27,7 +27,7 @@ class Streetcars {
             else {
                 return
             }
-            print("Streetcars array length is ", streetcars.endIndex)
+
             for streetcar in streetcars {
                 if streetcar.streetcar_id == streetcar_id {
                     streetcar.x = x

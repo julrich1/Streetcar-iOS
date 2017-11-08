@@ -120,12 +120,20 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Text here" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sXc-9P-HKp" userLabel="stop title">
-                                        <rect key="frame" x="8" y="11" width="359" height="21"/>
+                                        <rect key="frame" x="8" y="11" width="330" height="21"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
+                                    <button opaque="NO" contentMode="bottomRight" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Foh-3u-Tjw">
+                                        <rect key="frame" x="344" y="11" width="23" height="23"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <state key="normal" image="star_empty"/>
+                                        <connections>
+                                            <action selector="starTouch" destination="BYZ-38-t0r" eventType="touchUpInside" id="fcN-PP-Zz4"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" name="ltBlue"/>
                                 <connections>
@@ -166,6 +174,7 @@
                         <outlet property="constraintMenuWidth" destination="5Mv-9V-XYz" id="Do2-dx-kSx"/>
                         <outlet property="gestureScreenEdgePan" destination="up1-Zw-pi1" id="bCF-KP-Z2d"/>
                         <outlet property="mapContainerView" destination="gNo-RP-FeD" id="ggq-EZ-A2E"/>
+                        <outlet property="starButton" destination="Foh-3u-Tjw" id="kUr-W3-8b3"/>
                         <outlet property="viewBlack" destination="aQ8-uo-uPz" id="2wZ-EX-Ig4"/>
                         <outlet property="viewMenu" destination="Rfw-Es-ydO" id="CXi-Tu-kkS"/>
                     </connections>
@@ -211,6 +220,7 @@
     </scenes>
     <resources>
         <image name="hamburger" width="24" height="24"/>
+        <image name="star_empty" width="20" height="20"/>
         <namedColor name="ltBlue">
             <color red="0.18899999558925629" green="0.51899999380111694" blue="0.66900002956390381" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>

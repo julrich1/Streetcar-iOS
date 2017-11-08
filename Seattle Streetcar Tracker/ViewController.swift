@@ -10,11 +10,7 @@ import UIKit
 import GoogleMaps
 import SwiftyJSON
 
-var streetcars: Streetcars = Streetcars()
-var stops = [Stop]()
-
 var map: GMSMapView!
-var scTimer: Timer?
 
 var STREETCAR_IMAGE: UIImage?
 var STREETCAR_SELECTED_IMAGE: UIImage?
@@ -22,25 +18,34 @@ var STREETCAR_SELECTED_IMAGE: UIImage?
 var STOP_IMAGE: UIImage?
 var STOP_SELECTED_IMAGE: UIImage?
 
+var STAR_FULL_IMAGE: UIImage?
+var STAR_EMPTY_IMAGE: UIImage?
+
 var carAnimation = ARCarMovement()
 
-var selectedItem = (id: 0, type: "")
+var selectedItem = (id: 0, type: "", lastUpdated: 0)
 
 class ViewController: UIViewController, GMSMapViewDelegate {
-    @IBOutlet weak var mapContainerView: GMSMapView!
+    @IBOutlet var mapContainerView: GMSMapView!
     @IBOutlet var bottomStopPanel: BottomPanelStop!
+    @IBOutlet var starButton: UIButton!
     @IBOutlet var bottomStreetcarPanel: BottomPanelStreetcar!
     
-    @IBOutlet weak var gestureScreenEdgePan: UIScreenEdgePanGestureRecognizer!
-    @IBOutlet weak var viewBlack: UIView!
-    @IBOutlet weak var viewMenu: UIView!
-    @IBOutlet weak var constraintMenuLeft: NSLayoutConstraint!
-    @IBOutlet weak var constraintMenuWidth: NSLayoutConstraint!
+    @IBOutlet var gestureScreenEdgePan: UIScreenEdgePanGestureRecognizer!
+    @IBOutlet var viewBlack: UIView!
+    @IBOutlet var viewMenu: UIView!
+    @IBOutlet var constraintMenuLeft: NSLayoutConstraint!
+    @IBOutlet var constraintMenuWidth: NSLayoutConstraint!
     
 //    @IBOutlet weak var fhsRoute: UIButton!
 //    @IBOutlet weak var sluRoute: UIButton!
-    var polylines = [GMSPolyline]()
+    var scTimer: Timer?
+    var iwTimer: Timer?
     
+    var streetcars: Streetcars = Streetcars()
+    var polylines = [GMSPolyline]()
+    var stops = [Stop]()
+
     var route = 1
     
     let maxBlackViewAlpha: CGFloat = 0.5
@@ -91,11 +96,14 @@ class ViewController: UIViewController, GMSMapViewDelegate {
         self.view.addSubview(map!)
         self.view.sendSubview(toBack: map)
         
-        STREETCAR_IMAGE = UIImage(named: "streetcar")!.withRenderingMode(.alwaysTemplate)
-        STREETCAR_SELECTED_IMAGE = UIImage(named: "streetcar_selected")!.withRenderingMode(.alwaysTemplate)
+        STREETCAR_IMAGE = UIImage(named: "streetcar")
+        STREETCAR_SELECTED_IMAGE = UIImage(named: "streetcar_selected")
         
-        STOP_IMAGE = UIImage(named: "stop_icon")!.withRenderingMode(.alwaysTemplate)
-        STOP_SELECTED_IMAGE = UIImage(named: "stop_selected_icon")!.withRenderingMode(.alwaysTemplate)
+        STOP_IMAGE = UIImage(named: "stop_icon")
+        STOP_SELECTED_IMAGE = UIImage(named: "stop_selected_icon")
+        
+        STAR_FULL_IMAGE = UIImage(named: "star_full")
+        STAR_EMPTY_IMAGE = UIImage(named: "star_empty")
         
         getStops()
         startTimers()
@@ -104,6 +112,8 @@ class ViewController: UIViewController, GMSMapViewDelegate {
     func startTimers() {
         updateStreetcars()
         scTimer = Timer.scheduledTimer(timeInterval: 2, target: self, selector: #selector(self.updateStreetcars), userInfo: nil, repeats: true)
+        
+        iwTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.updateInfoWindows), userInfo: nil, repeats: true)
     }
     
     func removeSelectedIcon() {
@@ -122,6 +132,29 @@ class ViewController: UIViewController, GMSMapViewDelegate {
             }
         }
     }
+    
+    func setStreetcarPanelInfo(id: Int) {
+        let streetcar = streetcars.findStreetcarById(id: id)
+        
+        if (streetcar != nil) {
+            let sc = streetcar as! Streetcar
+
+            self.bottomStreetcarPanel.showStreetcar(idle: sc.idle, speed: streetcars.convertKmHrToMph(speed: sc.speedkmhr), location: "\(sc.x) \(sc.y)")
+        }
+    }
+    
+    func setArrivalsPanelInfo(id: Int) {
+        for stop in stops {
+            if stop.stopId == id {
+                print("Match found!")
+                
+                getStopArrivals(stop: stop, complete: {(arrivalStr: String) -> Void in
+                    print ("ArrivalSTR is: ", arrivalStr)
+                    self.bottomStopPanel.showArrivals(titleStr: stop.title, arrivalsStr: arrivalStr)
+                })
+            }
+        }
+    }
 
     func mapView(_ mapView: GMSMapView, didTap marker: GMSMarker) -> Bool {
         print("Clicked a marker")
@@ -133,35 +166,20 @@ class ViewController: UIViewController, GMSMapViewDelegate {
         }
 
         if ((marker.userData as! MarkerData).type == "streetcar") {
-            selectedItem = (id: id as Int, type: "streetcar")
+            selectedItem = (id: id as Int, type: "streetcar", lastUpdated: 0)
             marker.icon = STREETCAR_SELECTED_IMAGE
             bottomStopPanel.hide()
             bottomStreetcarPanel.show()
-            
-            let streetcar = streetcars.findStreetcarById(id: id)
-            
-            if (streetcar != nil) {
-                let sc = streetcar as! Streetcar
-                
-                self.bottomStreetcarPanel.showStreetcar(idle: sc.idle, speed: streetcars.convertKmHrToMph(speed: sc.speedkmhr), location: "\(sc.x) \(sc.y)")
-            }
+       
+            setStreetcarPanelInfo(id: id)
         }
         else if ((marker.userData as! MarkerData).type == "stop") {
-            selectedItem = (id: id as Int, type: "stop")
+            selectedItem = (id: id as Int, type: "stop", lastUpdated: 0)
             marker.icon = STOP_SELECTED_IMAGE
             bottomStreetcarPanel.hide()
             bottomStopPanel.show()
             
-            for stop in stops {
-                if stop.stopId == id {
-                    print("Match found!")
-                    
-                    getStopArrivals(stop: stop, complete: {(arrivalStr: String) -> Void in
-                        print ("ArrivalSTR is: ", arrivalStr)
-                        self.bottomStopPanel.showArrivals(titleStr: stop.title, arrivalsStr: arrivalStr)
-                    })
-                }
-            }
+            setArrivalsPanelInfo(id: id)
         }
 
         return false
@@ -170,7 +188,7 @@ class ViewController: UIViewController, GMSMapViewDelegate {
     func mapView(_ mapView: GMSMapView, didTapAt coordinate: CLLocationCoordinate2D) {
         print("Map clicked")
         removeSelectedIcon()
-        selectedItem = (id: 0, type: "")
+        selectedItem = (id: 0, type: "", lastUpdated: 0)
         hideMenu()
         bottomStopPanel.hide()
         bottomStreetcarPanel.hide()
@@ -206,9 +224,10 @@ class ViewController: UIViewController, GMSMapViewDelegate {
             marker.groundAnchor = CGPoint(x: 0.5, y: 0.5)
             marker.map = map
             
-            let scData = MarkerData(type: "stop", id: stop.stopId)
+            let stopData = MarkerData(type: "stop", id: stop.stopId)
             
-            marker.userData = scData
+            print (stopData)
+            marker.userData = stopData
             
             stop.marker = marker
         }
@@ -218,7 +237,7 @@ class ViewController: UIViewController, GMSMapViewDelegate {
     func updateMarkers() {
 
         DispatchQueue.main.async {
-            for streetcar in streetcars.streetcars {
+            for streetcar in self.streetcars.streetcars {
                 carAnimation.ARCarMovement(marker: streetcar.marker!, oldCoordinate: streetcar.marker!.position, newCoordinate: CLLocationCoordinate2D(latitude: streetcar.x, longitude: streetcar.y), mapView: map, bearing: Float(streetcar.heading))
 //                streetcar.marker?.position = CLLocationCoordinate2D(latitude: streetcar.x, longitude: streetcar.y)
 //                streetcar.marker?.rotation = CLLocationDegrees(streetcar.heading)
@@ -249,8 +268,11 @@ class ViewController: UIViewController, GMSMapViewDelegate {
                     let title: String = stop["title"].stringValue
 
                     let newStop = Stop(stopId: stopId, lat: lat, lon: lon, title: title)
-                    stops.append(newStop)
-                    self.createStopMarker(stop: newStop)
+                    
+                    if stopId != 0 {
+                        self.stops.append(newStop)
+                        self.createStopMarker(stop: newStop)
+                    }
                 }
                 
                 for (_, path) in json["route"]["path"] {
@@ -277,7 +299,7 @@ class ViewController: UIViewController, GMSMapViewDelegate {
         }
         
         let url = URL(string: "http://webservices.nextbus.com/service/publicJSONFeed?command=predictions&a=seattle-sc&r=" + routeStr + "&s=\(stop.stopId)")
-        
+
         urlSession.dataTask(with:url!, completionHandler: {(data, response, error) in
             guard let data = data, error == nil else { return }
 
@@ -337,14 +359,13 @@ class ViewController: UIViewController, GMSMapViewDelegate {
     
     @objc func updateStreetcars() {
         let url = URL(string: "http://sc-dev.shadowline.net/api/streetcars/" + String(route))
-        print ("updateStreetcars() called")
+
         urlSession.dataTask(with:url!, completionHandler: {(data, response, error) in
             guard let data = data, error == nil else { return }
             
             do {
                 let jsonArray = try JSONSerialization.jsonObject(with: data, options: []) as! [AnyObject]
-                print ("Response received for streetcars, updating the array!")
-                streetcars.updateStreetcars(scObject: jsonArray)
+                self.streetcars.updateStreetcars(scObject: jsonArray)
                 self.updateMarkers();
             } catch let error as NSError {
                 print(error)
@@ -518,8 +539,17 @@ class ViewController: UIViewController, GMSMapViewDelegate {
         getStops()
     }
     
+    @IBAction func starTouch() {
+        print("Touched the star")
+        starButton.setImage(STAR_FULL_IMAGE, for: UIControlState.normal)
+    }
+    
     func swapViews(lat: Double, lon: Double) {
         scTimer?.invalidate()
+        iwTimer?.invalidate()
+        
+        selectedItem.id = 0
+        selectedItem.type = ""
         
         urlSession.getAllTasks { tasks in
             for task in tasks {
@@ -540,6 +570,22 @@ class ViewController: UIViewController, GMSMapViewDelegate {
         
         let camera = GMSCameraPosition.camera(withLatitude: lat, longitude: lon, zoom: 15.0)
         map.moveCamera(GMSCameraUpdate.setCamera(camera))
+    }
+    
+    @objc func updateInfoWindows() {
+        print("updateInfoWindows() called")
+        if selectedItem.type == "streetcar" {
+            setStreetcarPanelInfo(id: selectedItem.id)
+        }
+        else if selectedItem.type == "stop" {
+            selectedItem.lastUpdated += 1
+            
+            if selectedItem.lastUpdated >= 20 {
+                selectedItem.lastUpdated = 0
+                
+                setArrivalsPanelInfo(id: selectedItem.id)
+            }
+        }
     }
 }
 
