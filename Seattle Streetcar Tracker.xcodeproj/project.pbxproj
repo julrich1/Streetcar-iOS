@@ -22,6 +22,9 @@
 		16ED065C1FB24823005F16BF /* BottomPanelStop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16ED065B1FB24823005F16BF /* BottomPanelStop.swift */; };
 		16ED065E1FB26F9C005F16BF /* BottomPanelStreetcar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16ED065D1FB26F9C005F16BF /* BottomPanelStreetcar.swift */; };
 		16F5E4B41FB377D300A26FFF /* ARCarMovement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F5E4B31FB377D300A26FFF /* ARCarMovement.swift */; };
+		16F5E4BA1FB4B9CD00A26FFF /* FavoriteStops.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F5E4B91FB4B9CD00A26FFF /* FavoriteStops.swift */; };
+		16F5E4BC1FB4CA3100A26FFF /* SettingsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F5E4BB1FB4CA3100A26FFF /* SettingsManager.swift */; };
+		16F5E4BE1FB4F7AB00A26FFF /* FavoriteStop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F5E4BD1FB4F7AB00A26FFF /* FavoriteStop.swift */; };
 		4625DF4C816006D30543131A /* Pods_Seattle_Streetcar_Tracker.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 011866411302D464C5927E44 /* Pods_Seattle_Streetcar_Tracker.framework */; };
 /* End PBXBuildFile section */
 
@@ -65,6 +68,9 @@
 		16ED065B1FB24823005F16BF /* BottomPanelStop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomPanelStop.swift; sourceTree = "<group>"; };
 		16ED065D1FB26F9C005F16BF /* BottomPanelStreetcar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomPanelStreetcar.swift; sourceTree = "<group>"; };
 		16F5E4B31FB377D300A26FFF /* ARCarMovement.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ARCarMovement.swift; sourceTree = "<group>"; };
+		16F5E4B91FB4B9CD00A26FFF /* FavoriteStops.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteStops.swift; sourceTree = "<group>"; };
+		16F5E4BB1FB4CA3100A26FFF /* SettingsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsManager.swift; sourceTree = "<group>"; };
+		16F5E4BD1FB4F7AB00A26FFF /* FavoriteStop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteStop.swift; sourceTree = "<group>"; };
 		1E625298D88A95BAD4DB7B04 /* Pods-Seattle Streetcar Tracker.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Seattle Streetcar Tracker.release.xcconfig"; path = "Pods/Target Support Files/Pods-Seattle Streetcar Tracker/Pods-Seattle Streetcar Tracker.release.xcconfig"; sourceTree = "<group>"; };
 		208933F6243A76DAC50A1101 /* Pods-Seattle Streetcar Tracker.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Seattle Streetcar Tracker.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Seattle Streetcar Tracker/Pods-Seattle Streetcar Tracker.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -134,6 +140,9 @@
 				16906F451FABDF6700A57E77 /* Streetcars.swift */,
 				16906F471FACC10F00A57E77 /* Stop.swift */,
 				16AF83521FB0D10100D80710 /* MarkerData.swift */,
+				16F5E4B91FB4B9CD00A26FFF /* FavoriteStops.swift */,
+				16F5E4BB1FB4CA3100A26FFF /* SettingsManager.swift */,
+				16F5E4BD1FB4F7AB00A26FFF /* FavoriteStop.swift */,
 			);
 			path = "Seattle Streetcar Tracker";
 			sourceTree = "<group>";
@@ -375,8 +384,11 @@
 				16906F441FABD7ED00A57E77 /* Streetcar.swift in Sources */,
 				16906F181FAB9C5600A57E77 /* ViewController.swift in Sources */,
 				16906F481FACC10F00A57E77 /* Stop.swift in Sources */,
+				16F5E4BA1FB4B9CD00A26FFF /* FavoriteStops.swift in Sources */,
 				16906F161FAB9C5600A57E77 /* AppDelegate.swift in Sources */,
+				16F5E4BC1FB4CA3100A26FFF /* SettingsManager.swift in Sources */,
 				16906F461FABDF6700A57E77 /* Streetcars.swift in Sources */,
+				16F5E4BE1FB4F7AB00A26FFF /* FavoriteStop.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

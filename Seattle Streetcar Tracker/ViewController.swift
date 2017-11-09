@@ -37,16 +37,18 @@ class ViewController: UIViewController, GMSMapViewDelegate {
     @IBOutlet var constraintMenuLeft: NSLayoutConstraint!
     @IBOutlet var constraintMenuWidth: NSLayoutConstraint!
     
-    @IBOutlet var favoriteStack: UIStackView!
+    @IBOutlet var favoritesStack: UIStackView!
     
 //    @IBOutlet weak var fhsRoute: UIButton!
 //    @IBOutlet weak var sluRoute: UIButton!
     var scTimer: Timer?
     var iwTimer: Timer?
+    var favTimer: Timer?
     
     var streetcars: Streetcars = Streetcars()
     var polylines = [GMSPolyline]()
     var stops = [Stop]()
+    var favoriteStops = FavoriteStops()
 
     var route = 1
     
@@ -55,7 +57,6 @@ class ViewController: UIViewController, GMSMapViewDelegate {
     var isLeftToRight = true
     
     var urlSession = URLSession.shared
-
     
 //    override func loadView() {
 //        let camera = GMSCameraPosition.camera(withLatitude: 47.605403, longitude: -122.320826, zoom: 15.0)
@@ -70,9 +71,17 @@ class ViewController: UIViewController, GMSMapViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        let routeValue = SettingsManager.loadRoute()
+        if routeValue != 0 {
+            route = routeValue
+        }
+        
+        let favs = SettingsManager.loadFavorites()
+        favoriteStops.fhs = favs.fhs
+        favoriteStops.slu = favs.slu
+
         // Hamburger Menu
         constraintMenuLeft.constant = -constraintMenuWidth.constant
-        
         viewBlack.alpha = 0
         viewBlack.isHidden = true
         
@@ -90,9 +99,17 @@ class ViewController: UIViewController, GMSMapViewDelegate {
         
         map = mapContainerView
         
-        let camera = GMSCameraPosition.camera(withLatitude: 47.609809, longitude: -122.320826, zoom: 15.0)
+        var camera: GMSCameraPosition
+        
+        if route == 1 {
+            camera = GMSCameraPosition.camera(withLatitude: 47.609809, longitude: -122.320826, zoom: 15.0)
+        }
+        else {
+            camera = GMSCameraPosition.camera(withLatitude: 47.621358, longitude: -122.338190, zoom: 15.0)
+        }
         
         map.moveCamera(GMSCameraUpdate.setCamera(camera))
+        
         map.delegate = self
         
         self.view.addSubview(map!)
@@ -107,6 +124,8 @@ class ViewController: UIViewController, GMSMapViewDelegate {
         STAR_FULL_IMAGE = UIImage(named: "star_full")
         STAR_EMPTY_IMAGE = UIImage(named: "star_empty")
         
+        getFavoritesArrivalTimes()
+        
         getStops()
         startTimers()
     }
@@ -116,6 +135,14 @@ class ViewController: UIViewController, GMSMapViewDelegate {
         scTimer = Timer.scheduledTimer(timeInterval: 2, target: self, selector: #selector(self.updateStreetcars), userInfo: nil, repeats: true)
         
         iwTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.updateInfoWindows), userInfo: nil, repeats: true)
+        
+        favTimer = Timer.scheduledTimer(timeInterval: 20, target: self, selector: #selector(self.getFavoritesArrivalTimes), userInfo: nil, repeats: true)
+    }
+    
+    func stopTimers() {
+        scTimer?.invalidate()
+        iwTimer?.invalidate()
+        favTimer?.invalidate()
     }
     
     func removeSelectedIcon() {
@@ -150,9 +177,11 @@ class ViewController: UIViewController, GMSMapViewDelegate {
             if stop.stopId == id {
                 print("Match found!")
                 
-                getStopArrivals(stop: stop, complete: {(arrivalStr: String) -> Void in
-                    print ("ArrivalSTR is: ", arrivalStr)
-                    self.bottomStopPanel.showArrivals(titleStr: stop.title, arrivalsStr: arrivalStr)
+                getStopArrivals(stopId: stop.stopId, complete: {(arrivalStr: String) -> Void in
+                    let finalStr = "Arriving in " + arrivalStr
+                    print ("ArrivalSTR is: ", finalStr)
+                    stop.arrivals = finalStr
+                    self.bottomStopPanel.showArrivals(stop: stop, arrivalsStr: finalStr, favorited: self.favoriteStops.isFavorited(id: stop.stopId, route: self.route))
                 })
             }
         }
@@ -290,7 +319,8 @@ class ViewController: UIViewController, GMSMapViewDelegate {
         }).resume()
     }
     
-    func getStopArrivals(stop: Stop, complete: @escaping (String) -> Void) {
+    func getStopArrivals(stopId: Int, complete: @escaping (String) -> Void) {
+        print("Getting stop arrivals!")
         var routeStr: String
         
         if route == 1 {
@@ -300,7 +330,7 @@ class ViewController: UIViewController, GMSMapViewDelegate {
             routeStr = "SLU"
         }
         
-        let url = URL(string: "http://webservices.nextbus.com/service/publicJSONFeed?command=predictions&a=seattle-sc&r=" + routeStr + "&s=\(stop.stopId)")
+        let url = URL(string: "http://webservices.nextbus.com/service/publicJSONFeed?command=predictions&a=seattle-sc&r=" + routeStr + "&s=\(stopId)")
 
         urlSession.dataTask(with:url!, completionHandler: {(data, response, error) in
             guard let data = data, error == nil else { return }
@@ -315,7 +345,7 @@ class ViewController: UIViewController, GMSMapViewDelegate {
                 return
             }
             
-            var predStr = "Arriving in "
+            var predStr = ""
             
             for (_, prediction) in json["predictions"]["direction"]["prediction"] {
                 predStr += prediction["minutes"].stringValue + ", "
@@ -323,10 +353,6 @@ class ViewController: UIViewController, GMSMapViewDelegate {
             
             let range = predStr.index(predStr.endIndex, offsetBy: -2)..<predStr.endIndex
             predStr.removeSubrange(range)
-
-            print (predStr)
-            
-            stop.arrivals = predStr
             
             complete(predStr)
         }).resume()
@@ -543,26 +569,28 @@ class ViewController: UIViewController, GMSMapViewDelegate {
     
     @IBAction func starTouch() {
         print("Touched the star")
-        starButton.setImage(STAR_FULL_IMAGE, for: UIControlState.normal)
+        if starButton.currentImage == STAR_FULL_IMAGE {
+            starButton.setImage(STAR_EMPTY_IMAGE, for: UIControlState.normal)
+            favoriteStops.remove(id: selectedItem.id, route: route)
+            SettingsManager.saveFavorites(favorites: favoriteStops)
+            print("favoriteStops main is ", favoriteStops.slu)
+        }
+        else {
+            for stop in stops {
+                if stop.stopId == selectedItem.id {
+                    favoriteStops.add(id: stop.stopId, title: stop.title, route: route)
+                    SettingsManager.saveFavorites(favorites: favoriteStops)
+                    starButton.setImage(STAR_FULL_IMAGE, for: UIControlState.normal)
+                    break
+                }
+            }
+        }
         
-        let lblNew = UILabel()
-        lblNew.backgroundColor = UIColor.blue
-        lblNew.text = "1st and Pike"
-        lblNew.textColor = UIColor.white
-//        lblNew.translatesAutoresizingMaskIntoConstraints = false
-        
-        favoriteStack.addArrangedSubview(lblNew)
-        
-        let lblNew2 = UILabel()
-        lblNew2.backgroundColor = UIColor.blue
-        lblNew2.text = "3, 14, 33, 53, 69 mins"
-        lblNew2.textColor = UIColor.white
-        favoriteStack.addArrangedSubview(lblNew2)
+        getFavoritesArrivalTimes()
     }
     
     func swapViews(lat: Double, lon: Double) {
-        scTimer?.invalidate()
-        iwTimer?.invalidate()
+        stopTimers()
         
         selectedItem.id = 0
         selectedItem.type = ""
@@ -574,6 +602,9 @@ class ViewController: UIViewController, GMSMapViewDelegate {
             }
         }
 
+
+        SettingsManager.saveRoute(route: route)
+        
         hideMenu()
         bottomStopPanel.hide()
         bottomStreetcarPanel.hide()
@@ -582,14 +613,66 @@ class ViewController: UIViewController, GMSMapViewDelegate {
         removePolyLines()
         removeStops()
         
+        getFavoritesArrivalTimes()
+        
         startTimers()
         
         let camera = GMSCameraPosition.camera(withLatitude: lat, longitude: lon, zoom: 15.0)
         map.moveCamera(GMSCameraUpdate.setCamera(camera))
     }
     
+    func drawFavoritesMenu() {
+        DispatchQueue.main.async {
+            var favorites: [FavoriteStop]
+            
+            for (index, view) in self.favoritesStack.arrangedSubviews.enumerated() {
+                if index != 0 {
+                    view.removeFromSuperview()
+                }
+            }
+            
+            if self.route == 1 {
+                favorites = self.favoriteStops.fhs
+            }
+            else {
+                favorites = self.favoriteStops.slu
+            }
+            
+            if favorites.count == 0 {
+                let lblNew = UILabel()
+                lblNew.text = "No saved favorites"
+                self.favoritesStack.addArrangedSubview(lblNew)
+
+                return
+            }
+            
+            for favorite in favorites {
+                let lblNew = UILabel()
+    //            lblNew.backgroundColor = UIColor.blue
+                lblNew.text = favorite.title
+    //            lblNew.textColor = UIColor.white
+                //        lblNew.translatesAutoresizingMaskIntoConstraints = false
+                
+                self.favoritesStack.addArrangedSubview(lblNew)
+                
+                let lblNew2 = UILabel()
+    //            lblNew2.backgroundColor = UIColor.blue
+                var arrivalStr: String
+                
+                if favorite.arrivalTime == "" {
+                    arrivalStr = "Unknown arrivals"
+                }
+                else {
+                    arrivalStr = favorite.arrivalTime
+                }
+                lblNew2.text = arrivalStr
+    //            lblNew2.textColor = UIColor.white
+                self.favoritesStack.addArrangedSubview(lblNew2)
+            }
+        }
+    }
+    
     @objc func updateInfoWindows() {
-        print("updateInfoWindows() called")
         if selectedItem.type == "streetcar" {
             setStreetcarPanelInfo(id: selectedItem.id)
         }
@@ -602,6 +685,88 @@ class ViewController: UIViewController, GMSMapViewDelegate {
                 setArrivalsPanelInfo(id: selectedItem.id)
             }
         }
+    }
+    
+    @objc func getFavoritesArrivalTimes() {
+        if route == 1 {
+            if favoriteStops.fhs.count == 0 {
+                drawFavoritesMenu()
+            }
+            else if favoriteStops.fhs.count == 1 {
+               getSingleFavoriteArrivalTime()
+            }
+            else if favoriteStops.fhs.count > 1 {
+                getMultiFavoritesArrivalTimes()
+            }
+        }
+        else if route == 2 {
+            if favoriteStops.slu.count == 0 {
+                drawFavoritesMenu()
+            }
+            else if favoriteStops.slu.count == 1 {
+                getSingleFavoriteArrivalTime()
+            }
+            else if favoriteStops.slu.count > 1 {
+                getMultiFavoritesArrivalTimes()
+            }
+        }
+    }
+    
+    func getSingleFavoriteArrivalTime() {
+        var stopId: Int
+        
+        if route == 1 {
+            stopId = favoriteStops.fhs[0].id
+        }
+        else {
+            stopId = favoriteStops.slu[0].id
+        }
+        
+        getStopArrivals(stopId: stopId, complete: {(arrivalStr: String) -> Void in
+            self.favoriteStops.findById(id: stopId, route: self.route).arrivalTime = arrivalStr + " minutes"
+            print ("ArrivalSTR is: ", arrivalStr)
+            self.drawFavoritesMenu()
+        })
+    }
+    
+    func getMultiFavoritesArrivalTimes() {
+        let urlString = favoriteStops.getQueryString(route: route)
+        let url = URL(string: urlString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!)
+        
+        urlSession.dataTask(with:url!, completionHandler: {(data, response, error) in
+            guard let data = data, error == nil else { return }
+            
+            var json: JSON
+            
+            do {
+                json = try JSON(data: data)
+            }
+            catch {
+                print("There was an error fetching arrival times")
+                return
+            }
+            
+            var predStr = ""
+            var id: Int
+            
+            for (_, prediction) in json["predictions"] {
+                id = prediction["stopTag"].intValue
+                for (_, stopPred) in prediction["direction"]["prediction"] {
+                    predStr += stopPred["minutes"].stringValue + ", "
+                }
+
+                let range = predStr.index(predStr.endIndex, offsetBy: -2)..<predStr.endIndex
+                predStr.removeSubrange(range)
+
+                predStr += " minutes"
+                print ("Favorites prediction string is: ", predStr)
+                
+                self.favoriteStops.findById(id: id, route: self.route).arrivalTime = predStr
+                predStr = ""
+                
+                self.drawFavoritesMenu()
+            }
+        }).resume()
     }
 }
 
