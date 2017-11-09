@@ -30,6 +30,9 @@ class ViewController: UIViewController, GMSMapViewDelegate {
     @IBOutlet var bottomStopPanel: BottomPanelStop!
     @IBOutlet var starButton: UIButton!
     @IBOutlet var bottomStreetcarPanel: BottomPanelStreetcar!
+    @IBOutlet var fhsButton: UIButton!
+    @IBOutlet var sluButton: UIButton!
+
     
     @IBOutlet var gestureScreenEdgePan: UIScreenEdgePanGestureRecognizer!
     @IBOutlet var viewBlack: UIView!
@@ -74,6 +77,15 @@ class ViewController: UIViewController, GMSMapViewDelegate {
         let routeValue = SettingsManager.loadRoute()
         if routeValue != 0 {
             route = routeValue
+        }
+        
+        if route == 1 {
+            sluButton.isSelected = false
+            fhsButton.isSelected = true
+        }
+        else {
+            sluButton.isSelected = true
+            fhsButton.isSelected = false
         }
         
         let favs = SettingsManager.loadFavorites()
@@ -173,6 +185,8 @@ class ViewController: UIViewController, GMSMapViewDelegate {
     }
     
     func setArrivalsPanelInfo(id: Int) {
+        bottomStopPanel.show()
+        
         for stop in stops {
             if stop.stopId == id {
                 print("Match found!")
@@ -556,6 +570,8 @@ class ViewController: UIViewController, GMSMapViewDelegate {
     @IBAction func fhsRouteAction() {
         print("Change route")
         route = 1
+        sluButton.isSelected = false
+        fhsButton.isSelected = true
         swapViews(lat: 47.609809, lon: -122.320826)
         getStops()
     }
@@ -563,6 +579,8 @@ class ViewController: UIViewController, GMSMapViewDelegate {
     @IBAction func sluRouteAction() {
         print("Change route")
         route = 2
+        fhsButton.isSelected = false
+        sluButton.isSelected = true
         swapViews(lat: 47.621358, lon: -122.338190)
         getStops()
     }
@@ -647,16 +665,13 @@ class ViewController: UIViewController, GMSMapViewDelegate {
             }
             
             for favorite in favorites {
-                let lblNew = UILabel()
-    //            lblNew.backgroundColor = UIColor.blue
-                lblNew.text = favorite.title
-    //            lblNew.textColor = UIColor.white
-                //        lblNew.translatesAutoresizingMaskIntoConstraints = false
+                let titleLabel = UILabel()
+                titleLabel.padding = UIEdgeInsets(top: 5, left: 5, bottom: 0, right: 0)
+
+                titleLabel.text = favorite.title
+                self.favoritesStack.addArrangedSubview(titleLabel)
                 
-                self.favoritesStack.addArrangedSubview(lblNew)
-                
-                let lblNew2 = UILabel()
-    //            lblNew2.backgroundColor = UIColor.blue
+                let arrivalLabel = UILabel()
                 var arrivalStr: String
                 
                 if favorite.arrivalTime == "" {
@@ -665,9 +680,9 @@ class ViewController: UIViewController, GMSMapViewDelegate {
                 else {
                     arrivalStr = favorite.arrivalTime
                 }
-                lblNew2.text = arrivalStr
-    //            lblNew2.textColor = UIColor.white
-                self.favoritesStack.addArrangedSubview(lblNew2)
+                arrivalLabel.padding = UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 0)
+                arrivalLabel.text = arrivalStr
+                self.favoritesStack.addArrangedSubview(arrivalLabel)
             }
         }
     }

@@ -12,9 +12,10 @@ import UIKit
 class BottomPanelStop: UIView {
     @IBOutlet var title: UILabel!
     @IBOutlet var arrivals: UILabel!
-    
-    @IBOutlet var starButton: UIButton!
+    @IBOutlet var loadSpinner: UIActivityIndicatorView!
 
+    @IBOutlet var starButton: UIButton!
+    
     let STAR_FULL_IMAGE = UIImage(named: "star_full")
     let STAR_EMPTY_IMAGE = UIImage(named: "star_empty")
 
@@ -29,9 +30,11 @@ class BottomPanelStop: UIView {
     
     func show() {
         DispatchQueue.main.async {
-            self.title.isHidden = false
-            self.arrivals.isHidden = false
-            self.starButton.isHidden = false
+            self.title.isHidden = true
+            self.arrivals.isHidden = true
+            self.starButton.isHidden = true
+            self.loadSpinner.isHidden = false
+            self.loadSpinner.startAnimating()
             self.isHidden = false
         }
     }
@@ -40,8 +43,14 @@ class BottomPanelStop: UIView {
         DispatchQueue.main.async {
             var icon: UIImage?
             
+            self.loadSpinner.stopAnimating()
+            self.loadSpinner.isHidden = true
+            
             self.title.text = stop.title
             self.arrivals.text = arrivalsStr
+            
+            self.title.isHidden = false
+            self.arrivals.isHidden = false
             
             if favorited {
                 icon = self.STAR_FULL_IMAGE
@@ -51,6 +60,8 @@ class BottomPanelStop: UIView {
             }
             
             self.starButton.setImage(icon, for: UIControlState.normal)
+
+            self.starButton.isHidden = false
         }
     }
 }
