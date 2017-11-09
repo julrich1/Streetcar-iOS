@@ -189,11 +189,9 @@ class ViewController: UIViewController, GMSMapViewDelegate {
         
         for stop in stops {
             if stop.stopId == id {
-                print("Match found!")
                 
                 getStopArrivals(stopId: stop.stopId, complete: {(arrivalStr: String) -> Void in
                     let finalStr = "Arriving in " + arrivalStr
-                    print ("ArrivalSTR is: ", finalStr)
                     stop.arrivals = finalStr
                     self.bottomStopPanel.showArrivals(stop: stop, arrivalsStr: finalStr, favorited: self.favoriteStops.isFavorited(id: stop.stopId, route: self.route))
                 })
@@ -202,8 +200,6 @@ class ViewController: UIViewController, GMSMapViewDelegate {
     }
 
     func mapView(_ mapView: GMSMapView, didTap marker: GMSMarker) -> Bool {
-        print("Clicked a marker")
-
         let id = (marker.userData as! MarkerData).id
 
         if id != selectedItem.id {
@@ -231,7 +227,6 @@ class ViewController: UIViewController, GMSMapViewDelegate {
     }
     
     func mapView(_ mapView: GMSMapView, didTapAt coordinate: CLLocationCoordinate2D) {
-        print("Map clicked")
         removeSelectedIcon()
         selectedItem = (id: 0, type: "", lastUpdated: 0)
         hideMenu()
@@ -271,7 +266,6 @@ class ViewController: UIViewController, GMSMapViewDelegate {
             
             let stopData = MarkerData(type: "stop", id: stop.stopId)
             
-            print (stopData)
             marker.userData = stopData
             
             stop.marker = marker
@@ -334,7 +328,6 @@ class ViewController: UIViewController, GMSMapViewDelegate {
     }
     
     func getStopArrivals(stopId: Int, complete: @escaping (String) -> Void) {
-        print("Getting stop arrivals!")
         var routeStr: String
         
         if route == 1 {
@@ -416,7 +409,6 @@ class ViewController: UIViewController, GMSMapViewDelegate {
     }
 
     @IBAction func gestureScreenEdgePan(_ sender: UIScreenEdgePanGestureRecognizer) {
-        print("Gesturescreenedgepan called")
         // retrieve the current state of the gesture
         if sender.state == UIGestureRecognizerState.began {
             
@@ -466,7 +458,6 @@ class ViewController: UIViewController, GMSMapViewDelegate {
     }
     
     @IBAction func gesturePan(_ sender: UIPanGestureRecognizer) {
-        print ("Gesturepan called")
         // retrieve the current state of the gesture
         if sender.state == UIGestureRecognizerState.began {
             
@@ -526,7 +517,6 @@ class ViewController: UIViewController, GMSMapViewDelegate {
     }
     
     func openMenu() {
-        print("Openmenu called")
         // when menu is opened, it's left constraint should be 0
         constraintMenuLeft.constant = 0
         
@@ -547,7 +537,6 @@ class ViewController: UIViewController, GMSMapViewDelegate {
     }
     
     func hideMenu() {
-        print ("Hidemenu called")
         // when menu is closed, it's left constraint should be of value that allows it to be completely hidden to the left of the screen - which is negative value of it's width
         constraintMenuLeft.constant = -constraintMenuWidth.constant
         
@@ -568,7 +557,6 @@ class ViewController: UIViewController, GMSMapViewDelegate {
     }
 
     @IBAction func fhsRouteAction() {
-        print("Change route")
         route = 1
         sluButton.isSelected = false
         fhsButton.isSelected = true
@@ -577,7 +565,6 @@ class ViewController: UIViewController, GMSMapViewDelegate {
     }
 
     @IBAction func sluRouteAction() {
-        print("Change route")
         route = 2
         fhsButton.isSelected = false
         sluButton.isSelected = true
@@ -586,12 +573,10 @@ class ViewController: UIViewController, GMSMapViewDelegate {
     }
     
     @IBAction func starTouch() {
-        print("Touched the star")
         if starButton.currentImage == STAR_FULL_IMAGE {
             starButton.setImage(STAR_EMPTY_IMAGE, for: UIControlState.normal)
             favoriteStops.remove(id: selectedItem.id, route: route)
             SettingsManager.saveFavorites(favorites: favoriteStops)
-            print("favoriteStops main is ", favoriteStops.slu)
         }
         else {
             for stop in stops {
@@ -616,7 +601,6 @@ class ViewController: UIViewController, GMSMapViewDelegate {
         urlSession.getAllTasks { tasks in
             for task in tasks {
                 task.cancel()
-                print("Cancelling task: ", task)
             }
         }
 
@@ -739,7 +723,6 @@ class ViewController: UIViewController, GMSMapViewDelegate {
         
         getStopArrivals(stopId: stopId, complete: {(arrivalStr: String) -> Void in
             self.favoriteStops.findById(id: stopId, route: self.route).arrivalTime = arrivalStr + " minutes"
-            print ("ArrivalSTR is: ", arrivalStr)
             self.drawFavoritesMenu()
         })
     }
@@ -774,7 +757,6 @@ class ViewController: UIViewController, GMSMapViewDelegate {
                 predStr.removeSubrange(range)
 
                 predStr += " minutes"
-                print ("Favorites prediction string is: ", predStr)
                 
                 self.favoriteStops.findById(id: id, route: self.route).arrivalTime = predStr
                 predStr = ""

@@ -20,89 +20,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aQ8-uo-uPz" userLabel="View Black">
-                                <rect key="frame" x="0.0" y="20" width="375" height="667"/>
-                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                                <gestureRecognizers/>
-                                <connections>
-                                    <outletCollection property="gestureRecognizers" destination="bh2-3g-1Wz" appends="YES" id="qup-eZ-b75"/>
-                                    <outletCollection property="gestureRecognizers" destination="HsT-Jg-YAQ" appends="YES" id="9Ob-3m-vwa"/>
-                                </connections>
-                            </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Rfw-Es-ydO" userLabel="View Menu">
-                                <rect key="frame" x="0.0" y="64" width="250" height="623"/>
-                                <subviews>
-                                    <stackView opaque="NO" contentMode="TopLeft" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="Eq7-6c-NRH" userLabel="Routes Stack">
-                                        <rect key="frame" x="20" y="20" width="210" height="109"/>
-                                        <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="TopLeft" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Route" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="T1I-Fv-ufK">
-                                                <rect key="frame" x="0.0" y="0.0" width="210" height="20.5"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="width" constant="210" id="BPs-HO-Qo1"/>
-                                                </constraints>
-                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <button opaque="NO" contentMode="left" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BFX-Kf-ZXh">
-                                                <rect key="frame" x="0.0" y="20.5" width="210" height="31"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                <inset key="contentEdgeInsets" minX="5" minY="5" maxX="0.0" maxY="5"/>
-                                                <state key="normal" title="First Hill">
-                                                    <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
-                                                </state>
-                                                <connections>
-                                                    <action selector="fhsRouteAction" destination="BYZ-38-t0r" eventType="touchUpInside" id="aZD-iD-nsf"/>
-                                                </connections>
-                                            </button>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VoB-nP-br3">
-                                                <rect key="frame" x="0.0" y="51.5" width="210" height="36"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                <inset key="contentEdgeInsets" minX="5" minY="5" maxX="0.0" maxY="10"/>
-                                                <state key="normal" title="South Lake Union">
-                                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                </state>
-                                                <connections>
-                                                    <action selector="sluRouteAction" destination="BYZ-38-t0r" eventType="touchUpInside" id="TKo-tQ-Rth"/>
-                                                </connections>
-                                            </button>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dLA-xC-CJf">
-                                                <rect key="frame" x="0.0" y="87.5" width="210" height="1"/>
-                                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="height" constant="1" id="2i1-jT-Afq"/>
-                                                </constraints>
-                                            </view>
-                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="Gu9-ay-L2M" userLabel="Favorites Stack">
-                                                <rect key="frame" x="0.0" y="88.5" width="210" height="20.5"/>
-                                                <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Favorite Stops" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="taR-9l-mmF">
-                                                        <rect key="frame" x="0.0" y="0.0" width="210" height="20.5"/>
-                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                        <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
-                                                </subviews>
-                                            </stackView>
-                                        </subviews>
-                                        <constraints>
-                                            <constraint firstItem="T1I-Fv-ufK" firstAttribute="top" secondItem="Eq7-6c-NRH" secondAttribute="top" id="Iex-k0-fkp"/>
-                                            <constraint firstItem="T1I-Fv-ufK" firstAttribute="leading" secondItem="Eq7-6c-NRH" secondAttribute="leading" id="ODm-2c-CaV"/>
-                                        </constraints>
-                                    </stackView>
-                                </subviews>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="250" id="5Mv-9V-XYz"/>
-                                    <constraint firstItem="Eq7-6c-NRH" firstAttribute="top" secondItem="Rfw-Es-ydO" secondAttribute="top" constant="20" symbolic="YES" id="9q7-co-g7r"/>
-                                    <constraint firstItem="Eq7-6c-NRH" firstAttribute="leading" secondItem="Rfw-Es-ydO" secondAttribute="leading" constant="20" symbolic="YES" id="bKg-QZ-zOw"/>
-                                </constraints>
-                            </view>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gNo-RP-FeD" customClass="GMSMapView">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                            </view>
                             <view hidden="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="siH-Ld-acj" userLabel="Bottom Panel Streetcar" customClass="BottomPanelStreetcar" customModule="Seattle_Streetcar_Tracker" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="573" width="375" height="95"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
@@ -174,6 +91,91 @@
                                     <outlet property="starButton" destination="Foh-3u-Tjw" id="IEF-WE-eIc"/>
                                     <outlet property="title" destination="sXc-9P-HKp" id="4qD-fp-0fp"/>
                                 </connections>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aQ8-uo-uPz" userLabel="View Black">
+                                <rect key="frame" x="0.0" y="20" width="375" height="667"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                <gestureRecognizers/>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="bh2-3g-1Wz" appends="YES" id="qup-eZ-b75"/>
+                                    <outletCollection property="gestureRecognizers" destination="HsT-Jg-YAQ" appends="YES" id="9Ob-3m-vwa"/>
+                                </connections>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Rfw-Es-ydO" userLabel="View Menu">
+                                <rect key="frame" x="0.0" y="64" width="250" height="623"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="Eq7-6c-NRH" userLabel="Routes Stack">
+                                        <rect key="frame" x="10" y="20" width="230" height="109"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="TopLeft" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Route" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="T1I-Fv-ufK">
+                                                <rect key="frame" x="0.0" y="0.0" width="230" height="20.5"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" relation="lessThanOrEqual" constant="230" id="BPs-HO-Qo1"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <button opaque="NO" contentMode="left" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BFX-Kf-ZXh">
+                                                <rect key="frame" x="0.0" y="20.5" width="230" height="31"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <inset key="contentEdgeInsets" minX="5" minY="5" maxX="0.0" maxY="5"/>
+                                                <state key="normal" title="First Hill">
+                                                    <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="fhsRouteAction" destination="BYZ-38-t0r" eventType="touchUpInside" id="aZD-iD-nsf"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VoB-nP-br3">
+                                                <rect key="frame" x="0.0" y="51.5" width="230" height="36"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <inset key="contentEdgeInsets" minX="5" minY="5" maxX="0.0" maxY="10"/>
+                                                <state key="normal" title="South Lake Union">
+                                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="sluRouteAction" destination="BYZ-38-t0r" eventType="touchUpInside" id="TKo-tQ-Rth"/>
+                                                </connections>
+                                            </button>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dLA-xC-CJf">
+                                                <rect key="frame" x="0.0" y="87.5" width="230" height="1"/>
+                                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="1" id="2i1-jT-Afq"/>
+                                                    <constraint firstAttribute="width" constant="230" id="JvE-aU-geu"/>
+                                                </constraints>
+                                            </view>
+                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="Gu9-ay-L2M" userLabel="Favorites Stack">
+                                                <rect key="frame" x="0.0" y="88.5" width="230" height="20.5"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Favorite Stops" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="taR-9l-mmF">
+                                                        <rect key="frame" x="0.0" y="0.0" width="230" height="20.5"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                        <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                </subviews>
+                                            </stackView>
+                                        </subviews>
+                                        <constraints>
+                                            <constraint firstItem="T1I-Fv-ufK" firstAttribute="top" secondItem="Eq7-6c-NRH" secondAttribute="top" id="Iex-k0-fkp"/>
+                                            <constraint firstItem="T1I-Fv-ufK" firstAttribute="leading" secondItem="Eq7-6c-NRH" secondAttribute="leading" id="ODm-2c-CaV"/>
+                                        </constraints>
+                                    </stackView>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="250" id="5Mv-9V-XYz"/>
+                                    <constraint firstItem="Eq7-6c-NRH" firstAttribute="top" secondItem="Rfw-Es-ydO" secondAttribute="top" constant="20" symbolic="YES" id="9q7-co-g7r"/>
+                                    <constraint firstAttribute="trailing" secondItem="Eq7-6c-NRH" secondAttribute="trailing" constant="10" id="gK8-cT-Vmf"/>
+                                    <constraint firstItem="Eq7-6c-NRH" firstAttribute="leading" secondItem="Rfw-Es-ydO" secondAttribute="leading" constant="10" id="ljo-JP-N9Q"/>
+                                </constraints>
+                            </view>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gNo-RP-FeD" customClass="GMSMapView">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

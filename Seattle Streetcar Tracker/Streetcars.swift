@@ -43,8 +43,6 @@ class Streetcars {
             }
 
             if !found {
-                print("Marker not found, creating a new one")
-                
                 let streetcar = Streetcar(
                     streetcar_id: streetcar_id,
                     x: x,
@@ -85,7 +83,6 @@ class Streetcars {
         }
         
         streetcars.removeAll(keepingCapacity: false)
-        print ("Removed all streetcars", streetcars.endIndex)
     }
 
 }

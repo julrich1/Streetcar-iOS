@@ -27,8 +27,6 @@ class SettingsManager {
         
         let favoritesSLU = convertDictionaryToFavs(data: codedSLU as! [Data])
         let favoritesFHS = convertDictionaryToFavs(data: codedFHS as! [Data])
-
-        print("Here are the decoded arrays: ", favoritesSLU, favoritesFHS)
         
         return (slu: favoritesSLU, fhs: favoritesFHS)
     }
@@ -42,7 +40,6 @@ class SettingsManager {
             dictStops.append(NSKeyedArchiver.archivedData(withRootObject: dict))
         }
         
-        print (dictStops)
         return dictStops
     }
     
@@ -63,14 +60,12 @@ class SettingsManager {
         let defaults = UserDefaults.standard
 
         defaults.set(route, forKey: "route")
-        print("Saved route, value is ", route)
     }
     
     static func loadRoute() -> Int{
         let defaults = UserDefaults.standard
         let routeValue = defaults.integer(forKey: "route")
         
-        print("Loaded route, value is ", routeValue)
         return routeValue
     }
     

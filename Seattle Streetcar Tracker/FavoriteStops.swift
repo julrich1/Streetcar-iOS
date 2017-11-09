@@ -25,7 +25,6 @@ class FavoriteStops {
         if route == 1 {
             for (index, stop) in fhs.enumerated() {
                 if stop.id == id {
-                    print("Found stop at index ", index)
                     fhs.remove(at: index)
                     break
                 }
@@ -34,7 +33,6 @@ class FavoriteStops {
         else if route == 2 {
             for (index, stop) in slu.enumerated() {
                 if stop.id == id {
-                    print("Found stop at index ", index)
                     slu.remove(at: index)
                     break
                 }
