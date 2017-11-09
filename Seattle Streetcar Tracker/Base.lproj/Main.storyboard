@@ -33,7 +33,7 @@
                                 <rect key="frame" x="0.0" y="64" width="200" height="623"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="TopLeft" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="Eq7-6c-NRH">
-                                        <rect key="frame" x="20" y="20" width="175" height="80.5"/>
+                                        <rect key="frame" x="20" y="20" width="175" height="102"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="TopLeft" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Route" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="T1I-Fv-ufK">
                                                 <rect key="frame" x="0.0" y="0.0" width="175" height="20.5"/>
@@ -55,6 +55,19 @@
                                                     <action selector="sluRouteAction" destination="BYZ-38-t0r" eventType="touchUpInside" id="TKo-tQ-Rth"/>
                                                 </connections>
                                             </button>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dLA-xC-CJf">
+                                                <rect key="frame" x="0.0" y="80.5" width="175" height="1"/>
+                                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="1" id="2i1-jT-Afq"/>
+                                                </constraints>
+                                            </view>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Favorite Stops" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="taR-9l-mmF">
+                                                <rect key="frame" x="0.0" y="81.5" width="175" height="20.5"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
                                         </subviews>
                                         <constraints>
                                             <constraint firstItem="T1I-Fv-ufK" firstAttribute="top" secondItem="Eq7-6c-NRH" secondAttribute="top" id="Iex-k0-fkp"/>
@@ -172,6 +185,7 @@
                         <outlet property="bottomStreetcarPanel" destination="siH-Ld-acj" id="Aam-hH-e6v"/>
                         <outlet property="constraintMenuLeft" destination="WTZ-2S-mgV" id="yU7-8N-lpa"/>
                         <outlet property="constraintMenuWidth" destination="5Mv-9V-XYz" id="Do2-dx-kSx"/>
+                        <outlet property="favoriteStack" destination="Eq7-6c-NRH" id="CLm-pL-Dm8"/>
                         <outlet property="gestureScreenEdgePan" destination="up1-Zw-pi1" id="bCF-KP-Z2d"/>
                         <outlet property="mapContainerView" destination="gNo-RP-FeD" id="ggq-EZ-A2E"/>
                         <outlet property="starButton" destination="Foh-3u-Tjw" id="kUr-W3-8b3"/>

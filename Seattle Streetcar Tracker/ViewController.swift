@@ -37,6 +37,8 @@ class ViewController: UIViewController, GMSMapViewDelegate {
     @IBOutlet var constraintMenuLeft: NSLayoutConstraint!
     @IBOutlet var constraintMenuWidth: NSLayoutConstraint!
     
+    @IBOutlet var favoriteStack: UIStackView!
+    
 //    @IBOutlet weak var fhsRoute: UIButton!
 //    @IBOutlet weak var sluRoute: UIButton!
     var scTimer: Timer?
@@ -542,6 +544,20 @@ class ViewController: UIViewController, GMSMapViewDelegate {
     @IBAction func starTouch() {
         print("Touched the star")
         starButton.setImage(STAR_FULL_IMAGE, for: UIControlState.normal)
+        
+        let lblNew = UILabel()
+        lblNew.backgroundColor = UIColor.blue
+        lblNew.text = "1st and Pike"
+        lblNew.textColor = UIColor.white
+//        lblNew.translatesAutoresizingMaskIntoConstraints = false
+        
+        favoriteStack.addArrangedSubview(lblNew)
+        
+        let lblNew2 = UILabel()
+        lblNew2.backgroundColor = UIColor.blue
+        lblNew2.text = "3, 14, 33, 53, 69 mins"
+        lblNew2.textColor = UIColor.white
+        favoriteStack.addArrangedSubview(lblNew2)
     }
     
     func swapViews(lat: Double, lon: Double) {
