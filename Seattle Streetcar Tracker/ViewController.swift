@@ -10,6 +10,8 @@ import UIKit
 import GoogleMaps
 import SwiftyJSON
 
+let API_URL = "http://sc-dev.shadowline.net/"
+
 var map: GMSMapView!
 
 var STREETCAR_IMAGE: UIImage?
@@ -285,7 +287,7 @@ class ViewController: UIViewController, GMSMapViewDelegate {
     }
     
     func getStops() {
-        let url = URL(string: "http://sc-dev.shadowline.net/api/routes/" + String(route))
+        let url = URL(string: API_URL + "api/routes/" + String(route))
 
         urlSession.dataTask(with:url!, completionHandler: {(data, response, error) in
             guard let data = data, error == nil else { return }
@@ -328,16 +330,7 @@ class ViewController: UIViewController, GMSMapViewDelegate {
     }
     
     func getStopArrivals(stopId: Int, complete: @escaping (String) -> Void) {
-        var routeStr: String
-        
-        if route == 1 {
-            routeStr = "FHS"
-        }
-        else {
-            routeStr = "SLU"
-        }
-        
-        let url = URL(string: "http://webservices.nextbus.com/service/publicJSONFeed?command=predictions&a=seattle-sc&r=" + routeStr + "&s=\(stopId)")
+        let url = URL(string: API_URL + "api/routes/" + String(route) + "/arrivals/" + "\(stopId)")
 
         urlSession.dataTask(with:url!, completionHandler: {(data, response, error) in
             guard let data = data, error == nil else { return }
@@ -354,12 +347,14 @@ class ViewController: UIViewController, GMSMapViewDelegate {
             
             var predStr = ""
             
-            for (_, prediction) in json["predictions"]["direction"]["prediction"] {
-                predStr += prediction["minutes"].stringValue + ", "
+            for (_, prediction) in json[0]["arrivals"] {
+                predStr += prediction.stringValue + ", "
             }
             
             let range = predStr.index(predStr.endIndex, offsetBy: -2)..<predStr.endIndex
             predStr.removeSubrange(range)
+            
+            predStr += " minutes"
             
             complete(predStr)
         }).resume()
@@ -393,7 +388,7 @@ class ViewController: UIViewController, GMSMapViewDelegate {
     }
     
     @objc func updateStreetcars() {
-        let url = URL(string: "http://sc-dev.shadowline.net/api/streetcars/" + String(route))
+        let url = URL(string: API_URL + "api/streetcars/" + String(route))
 
         urlSession.dataTask(with:url!, completionHandler: {(data, response, error) in
             guard let data = data, error == nil else { return }
@@ -747,10 +742,10 @@ class ViewController: UIViewController, GMSMapViewDelegate {
             var predStr = ""
             var id: Int
             
-            for (_, prediction) in json["predictions"] {
-                id = prediction["stopTag"].intValue
-                for (_, stopPred) in prediction["direction"]["prediction"] {
-                    predStr += stopPred["minutes"].stringValue + ", "
+            for (_, prediction) in json {
+                id = prediction["stopId"].intValue
+                for (_, stopPred) in prediction["arrivals"] {
+                    predStr += stopPred.stringValue + ", "
                 }
 
                 let range = predStr.index(predStr.endIndex, offsetBy: -2)..<predStr.endIndex

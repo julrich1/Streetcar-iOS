@@ -79,19 +79,16 @@ class FavoriteStops {
     }
     
     func getQueryString(route: Int) -> String {
-        var url = "http://webservices.nextbus.com/service/publicJSONFeed?command=predictionsForMultiStops&a=seattle-sc"
-        var textRoute: String
+        var url = API_URL + "api/routes/" + String(route) + "/arrivals/"
         
         if route == 1 {
-            textRoute = "FHS"
             for stop in fhs {
-                url += "&stops=" + textRoute + "|" + String(stop.id)
+                url += String(stop.id) + ","
             }
         }
         else {
-            textRoute = "SLU"
             for stop in slu {
-                url += "&stops=" + textRoute + "|" + String(stop.id)
+                url += String(stop.id) + ","
             }
         }
         
