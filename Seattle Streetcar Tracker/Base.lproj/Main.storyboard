@@ -105,7 +105,7 @@
                                 <rect key="frame" x="0.0" y="64" width="250" height="623"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="Eq7-6c-NRH" userLabel="Routes Stack">
-                                        <rect key="frame" x="10" y="20" width="230" height="109"/>
+                                        <rect key="frame" x="10" y="20" width="230" height="117"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="TopLeft" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Route" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="T1I-Fv-ufK">
                                                 <rect key="frame" x="0.0" y="0.0" width="230" height="20.5"/>
@@ -145,17 +145,19 @@
                                                     <constraint firstAttribute="height" constant="1" id="2i1-jT-Afq"/>
                                                     <constraint firstAttribute="width" constant="230" id="JvE-aU-geu"/>
                                                 </constraints>
+                                                <edgeInsets key="layoutMargins" top="8" left="8" bottom="8" right="8"/>
                                             </view>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="Gu9-ay-L2M" userLabel="Favorites Stack">
-                                                <rect key="frame" x="0.0" y="88.5" width="230" height="20.5"/>
+                                                <rect key="frame" x="0.0" y="88.5" width="230" height="28.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Favorite Stops" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="taR-9l-mmF">
-                                                        <rect key="frame" x="0.0" y="0.0" width="230" height="20.5"/>
+                                                        <rect key="frame" x="0.0" y="8" width="230" height="20.5"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                         <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                 </subviews>
+                                                <edgeInsets key="layoutMargins" top="8" left="0.0" bottom="0.0" right="0.0"/>
                                             </stackView>
                                         </subviews>
                                         <constraints>

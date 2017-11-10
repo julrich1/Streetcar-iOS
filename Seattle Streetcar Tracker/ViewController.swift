@@ -636,9 +636,10 @@ class ViewController: UIViewController, GMSMapViewDelegate {
             }
             
             if favorites.count == 0 {
-                let lblNew = UILabel()
-                lblNew.text = "No saved favorites"
-                self.favoritesStack.addArrangedSubview(lblNew)
+                let noFavLbl = UILabel()
+                noFavLbl.padding = UIEdgeInsets(top: 5, left: 5, bottom: 0, right: 0)
+                noFavLbl.text = "No saved favorites"
+                self.favoritesStack.addArrangedSubview(noFavLbl)
 
                 return
             }
@@ -717,7 +718,7 @@ class ViewController: UIViewController, GMSMapViewDelegate {
         }
         
         getStopArrivals(stopId: stopId, complete: {(arrivalStr: String) -> Void in
-            self.favoriteStops.findById(id: stopId, route: self.route).arrivalTime = arrivalStr + " minutes"
+            self.favoriteStops.findById(id: stopId, route: self.route).arrivalTime = arrivalStr
             self.drawFavoritesMenu()
         })
     }
