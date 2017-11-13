@@ -44,8 +44,6 @@ class ViewController: UIViewController, GMSMapViewDelegate {
     
     @IBOutlet var favoritesStack: UIStackView!
     
-//    @IBOutlet weak var fhsRoute: UIButton!
-//    @IBOutlet weak var sluRoute: UIButton!
     var scTimer: Timer?
     var iwTimer: Timer?
     var favTimer: Timer?
@@ -62,16 +60,6 @@ class ViewController: UIViewController, GMSMapViewDelegate {
     var isLeftToRight = true
     
     var urlSession = URLSession.shared
-    
-//    override func loadView() {
-//        let camera = GMSCameraPosition.camera(withLatitude: 47.605403, longitude: -122.320826, zoom: 15.0)
-//        map = GMSMapView.map(withFrame: CGRect.zero, camera: camera)
-//        map.delegate = self
-//
-//        view = map
-////        self.view.addSubview(map)
-////        self.view.insertSubview(map, at: 0)
-//    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -280,8 +268,6 @@ class ViewController: UIViewController, GMSMapViewDelegate {
         DispatchQueue.main.async {
             for streetcar in self.streetcars.streetcars {
                 carAnimation.ARCarMovement(marker: streetcar.marker!, oldCoordinate: streetcar.marker!.position, newCoordinate: CLLocationCoordinate2D(latitude: streetcar.x, longitude: streetcar.y), mapView: map, bearing: Float(streetcar.heading))
-//                streetcar.marker?.position = CLLocationCoordinate2D(latitude: streetcar.x, longitude: streetcar.y)
-//                streetcar.marker?.rotation = CLLocationDegrees(streetcar.heading)
             }
         }
     }

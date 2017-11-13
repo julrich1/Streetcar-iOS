@@ -68,7 +68,4 @@ class SettingsManager {
         
         return routeValue
     }
-    
-    
-    
 }
