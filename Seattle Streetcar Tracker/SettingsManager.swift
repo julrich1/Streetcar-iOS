@@ -22,12 +22,12 @@ class SettingsManager {
     static func loadFavorites() -> (slu: [FavoriteStop], fhs: [FavoriteStop]) {
         let defaults = UserDefaults.standard
         
-        let codedSLU = defaults.array(forKey: "favorites-slu")
-        let codedFHS = defaults.array(forKey: "favorites-fhs")
+        let codedSLU = defaults.array(forKey: "favorites-slu") ?? []
+        let codedFHS = defaults.array(forKey: "favorites-fhs") ?? []
         
         let favoritesSLU = convertDictionaryToFavs(data: codedSLU as! [Data])
         let favoritesFHS = convertDictionaryToFavs(data: codedFHS as! [Data])
-        
+
         return (slu: favoritesSLU, fhs: favoritesFHS)
     }
     
